@@ -1,39 +1,20 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useRoute } from "@react-navigation/native";
 
+import vaccines from "../data/vaccines.json";
+import VaccineRow from "../components/VaccineRow";
 
-export default function PetVaccinesScreen({navigation} : any) {
+export default function PetVaccinesScreen({ navigation }: any) {
+  const route = useRoute();
+  const { pet } = route.params as any;
 
-const route = useRoute();
-const {pet} = route.params as any;
-
-const vaccines = [
-    {
-        idVaccine: 1, 
-        petId: pet.id,
-        nameVaccine:"V10",
-        status:"Atrasada",
-    },
-    {
-        idVaccine: 2,
-        nameVaccine: "Raiava",
-        status: "Em dia",
-    }
-];
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-
-        
+      <View style={styles.content}>
         <View style={styles.petCard}>
           <View style={styles.petImage}>
             <Ionicons name="paw" size={40} color="#eb9a22" />
@@ -42,55 +23,22 @@ const vaccines = [
           <View style={styles.petInfo}>
             <Text style={styles.petName}>{pet.name}</Text>
 
-            <Text style={styles.petDetails}>
-             {pet.breed}
-            </Text>
+            <Text style={styles.petDetails}>{pet.breed}</Text>
 
             <Text style={styles.petDetails}>
               {pet.age} • {pet.weight}
             </Text>
-
-            <Text style={styles.petId}>
-              ID: PET-4821
-            </Text>
           </View>
         </View>
 
-      {
-  vaccines.map((vaccine) => (
-    <View
-      key={vaccine.idVaccine}
-      style={styles.vaccineCard}
-    >
-
-      <View style={styles.vaccineTop}>
-
-        <View style={styles.vaccineNameArea}>
-          <Ionicons
-            name="medkit"
-            size={22}
-            color="#d62828"
-          />
-
-          <Text style={styles.vaccineName}>
-            {vaccine.nameVaccine}
-          </Text>
-        </View>
-
-        <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>
-            {vaccine.status}
-          </Text>
-        </View>
-
+        <FlatList
+          data={vaccines}
+          keyExtractor={(item) => item.idVaccine.toString()}
+          renderItem={({item}) => (
+            <VaccineRow vaccine={item}/>
+          )}
+        />
       </View>
-
-
-    </View>
-  ))
-}
-
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -106,7 +54,7 @@ const styles = StyleSheet.create({
   },
 
   petCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#eb9a22",
     borderRadius: 20,
     padding: 20,
     flexDirection: "row",
@@ -149,7 +97,7 @@ const styles = StyleSheet.create({
 
   petDetails: {
     fontSize: 15,
-    color: "#666",
+    color: "#1F2937",
     marginBottom: 4,
   },
 
