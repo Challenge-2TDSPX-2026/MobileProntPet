@@ -8,7 +8,8 @@ import AuthScreen from "./src/screens/AuthScreen";
 import TutorForm from './src/screens/TutorRegistration';
 import PetForm from './src/screens/PetFormScreen';
 import TutorHome from './src/screens/TutorHomeScreen';
-import PetVaccine from './src/screens/PetVaccinesScreen';
+import PetVaccinesScreen from './src/screens/PetVaccinesScreen';
+import MyPetsScreen from './src/screens/MyPetsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,8 +41,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="PetVaccineScreen"
-          component={PetVaccine}
+          name="PetVaccinesScreen"
+          component={PetVaccinesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MyPetsScreen"
+          component={MyPetsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

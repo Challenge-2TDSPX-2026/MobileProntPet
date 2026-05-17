@@ -9,8 +9,9 @@ import vaccines from "../data/vaccines.json";
 import VaccineRow from "../components/VaccineRow";
 
 export default function PetVaccinesScreen({ navigation }: any) {
-  const route = useRoute();
-  const { pet } = route.params as any;
+  const route = useRoute<any>();
+
+  const pet = route.params?.pet;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,9 +35,7 @@ export default function PetVaccinesScreen({ navigation }: any) {
         <FlatList
           data={vaccines}
           keyExtractor={(item) => item.idVaccine.toString()}
-          renderItem={({item}) => (
-            <VaccineRow vaccine={item}/>
-          )}
+          renderItem={({ item }) => <VaccineRow vaccine={item} />}
         />
       </View>
     </SafeAreaView>

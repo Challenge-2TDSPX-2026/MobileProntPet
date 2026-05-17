@@ -32,7 +32,7 @@ export default function TutorHomeScreen({ navigation }: any) {
           <View style={styles.content}>
             {/* Atenção Necessária */}
             <Text style={styles.sectionTitle}>Atenção Necessária</Text>
-            <TouchableOpacity style={[styles.card, styles.alertCard]} onPress={()=> navigation.navigate("PetVaccineScreen", {pet: pet})}>
+            <TouchableOpacity style={[styles.card, styles.alertCard]} onPress={()=> navigation.navigate("PetVaccinesScreen", {pet: pet})}>
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons
                   name="needle"

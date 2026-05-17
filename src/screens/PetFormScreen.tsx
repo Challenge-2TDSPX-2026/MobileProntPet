@@ -5,10 +5,10 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function PetFormScreen({ navigation }: any) {
   const [form, setForm] = useState({
-    id: Math.floor(Math.random() *100),
     name: "",
     species: "Cachorro",
     breed: "",
@@ -108,8 +108,33 @@ export default function PetFormScreen({ navigation }: any) {
           </Picker>
 
           <MainButton
-            title="Criar Conta "
-            onPress={() => navigation.navigate("TutorHomeScreen", { pet: form })}
+            title="Adicionar Novo Pet "
+            onPress={async () => {
+              const newPet = {
+                ...form,
+                id: Date.now(),
+              };
+
+              try{
+                const storedPets = await AsyncStorage.getItem("pets")
+
+                const pets = storedPets
+                  ? JSON.parse(storedPets)
+                  : [];
+                
+                const updatedPets = [...pets, newPet];
+
+                await AsyncStorage.setItem(
+                  "pets",
+                  JSON.stringify(updatedPets)
+                );
+
+                navigation.navigate("MyPetsScreen");
+
+              }catch(error){
+                console.log(error);
+              }
+            }}
           />
         </ScrollView>
       </SafeAreaView>
