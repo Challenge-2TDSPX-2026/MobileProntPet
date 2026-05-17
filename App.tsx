@@ -10,6 +10,7 @@ import PetForm from './src/screens/PetFormScreen';
 import TutorHome from './src/screens/TutorHomeScreen';
 import PetVaccinesScreen from './src/screens/PetVaccinesScreen';
 import MyPetsScreen from './src/screens/MyPetsScreen';
+import LoginScreen from './src/screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ export default function App() {
         <Stack.Screen
           name="MyPetsScreen"
           component={MyPetsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

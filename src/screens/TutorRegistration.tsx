@@ -60,7 +60,7 @@ export default function TutorRegistration({ navigation }: any) {
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="000.000.000-00"
                     keyboardType="numeric"
-                    onChangeText={(txt) =>
+                    onChangeText={(txt) => 
                       setFormData({ ...formData, cpf: txt })
                     }
                   />
@@ -140,7 +140,7 @@ export default function TutorRegistration({ navigation }: any) {
 
               <MainButton
                 title="Criar Conta "
-                onPress={() => navigation.navigate("PetFormScreen")}
+                onPress={() => navigation.navigate("LoginScreen")}
               />
             </View>
           </ScrollView>
