@@ -24,11 +24,7 @@ export default function PetVaccinesScreen({ navigation }: any) {
           <View style={styles.petInfo}>
             <Text style={styles.petName}>{pet.name}</Text>
 
-            <Text style={styles.petDetails}>{pet.breed}</Text>
-
-            <Text style={styles.petDetails}>
-              {pet.age} • {pet.weight}
-            </Text>
+            <Text style={styles.petInfo}>{pet.breed} • {pet.age} anos</Text>
           </View>
         </View>
 

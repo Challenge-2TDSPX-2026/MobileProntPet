@@ -6,25 +6,47 @@ import { Picker } from "@react-native-picker/picker";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function PetFormScreen({ navigation }: any) {
   const [form, setForm] = useState({
     name: "",
     species: "Cachorro",
     breed: "",
-    age: "",
+    birthDate: new Date(),
+    age:"",
     weight: "",
     sex: "Macho",
   });
 
   const [focusedInput, setFocusedInput] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  function calculateAge(birthDate: Date){
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDiferrence = today.getMonth() - birthDate.getMonth();
+
+    if(monthDiferrence < 0 || (monthDiferrence == 0 && today.getDate() < birthDate.getDate())){
+      age--;
+    }
+    
+    return form.age = age.toString() ;
+  }
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <ScrollView style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{
+            paddingBottom: 40,
+          }}
+        >
           <HeaderForm
-            stepText="Passo 2 de 2"
+            stepText="Passo 3 de 3"
             title="Cadastro do Pet"
             subtitle="Insira as informações básicas do seu Pet para ter acesso a plataforma."
           />
@@ -67,20 +89,29 @@ export default function PetFormScreen({ navigation }: any) {
 
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.label}>Idade (anos)</Text>
+              <Text style={styles.label}>Data de nascimento:</Text>
+
               <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "Idade" && styles.inputFocused,
-                ]}
-                onFocus={() => setFocusedInput("Idade")}
-                onBlur={() => setFocusedInput(" ")}
-                keyboardType="numeric"
-                value={form.age}
-                onChangeText={(t) =>
-                  setForm({ ...form, age: t.replace(/[^0-9]/g, "") })
-                }
+                style={styles.input}
+                value={form.birthDate.toLocaleDateString("pt-BR")}
+                editable={true}
+                onTouchStart={() => setShowDatePicker(true)}
               />
+              {showDatePicker && (
+                <DateTimePicker
+                  value={form.birthDate}
+                  mode="date"
+                  display="default"
+                  maximumDate={new Date()}
+                  onChange={(event, selectDate) => {
+                    setShowDatePicker(false);
+
+                    if (selectDate) {
+                      setForm({ ...form, birthDate: selectDate });
+                    }
+                  }}
+                />
+              )}
             </View>
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={styles.label}>Peso (kg)</Text>
@@ -107,6 +138,39 @@ export default function PetFormScreen({ navigation }: any) {
             <Picker.Item label="Fêmea" value="Fêmea" />
           </Picker>
 
+          <View style={styles.line}></View>
+
+          <View>
+            <HeaderForm
+              stepText=""
+              title="Informações do Pet"
+              subtitle="Confira as informações de cadastro, antes de adicionar seu Pet."
+            />
+
+            <Text style={styles.label}>
+              <Text>
+                 Nome: {form.name}
+              </Text>
+             
+              
+            </Text>
+
+            <Text style={styles.label}>Espécie: {form.species}</Text>
+
+            <Text style={styles.label}>Raça: {form.breed}</Text>
+
+            <Text style={styles.label}>
+              Data de Nascimento:
+              {form.birthDate.toLocaleDateString("pt-BR")}
+            </Text>
+
+            <Text style={styles.label}>
+              Idade: {calculateAge(form.birthDate)} anos
+            </Text>
+
+            <Text style={styles.label}>Peso: {form.weight}</Text>
+            <Text style={styles.label}>Sexo: {form.sex}</Text>
+          </View>
           <MainButton
             title="Adicionar Novo Pet "
             onPress={async () => {
@@ -115,23 +179,17 @@ export default function PetFormScreen({ navigation }: any) {
                 id: Date.now(),
               };
 
-              try{
-                const storedPets = await AsyncStorage.getItem("pets")
+              try {
+                const storedPets = await AsyncStorage.getItem("pets");
 
-                const pets = storedPets
-                  ? JSON.parse(storedPets)
-                  : [];
-                
+                const pets = storedPets ? JSON.parse(storedPets) : [];
+
                 const updatedPets = [...pets, newPet];
 
-                await AsyncStorage.setItem(
-                  "pets",
-                  JSON.stringify(updatedPets)
-                );
+                await AsyncStorage.setItem("pets", JSON.stringify(updatedPets));
 
                 navigation.navigate("MyPetsScreen");
-
-              }catch(error){
+              } catch (error) {
                 console.log(error);
               }
             }}
@@ -154,5 +212,10 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", justifyContent: "space-between" },
   inputFocused: {
     borderColor: "#eb9a22",
+  },
+  line: {
+    borderTopColor: "black",
+    marginTop: 10,
+    borderWidth: 0.5,
   },
 });

@@ -11,6 +11,7 @@ import TutorHome from './src/screens/TutorHomeScreen';
 import PetVaccinesScreen from './src/screens/PetVaccinesScreen';
 import MyPetsScreen from './src/screens/MyPetsScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import MedicalHistoryScreen from './src/screens/MedicalHistoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,11 @@ export default function App() {
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MedicalHistoryScreen"
+          component={MedicalHistoryScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

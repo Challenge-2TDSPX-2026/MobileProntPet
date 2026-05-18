@@ -46,7 +46,7 @@ export default function MyPetsScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* HEADER */}
+  
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Meus Pets</Text>
 
@@ -80,12 +80,12 @@ export default function MyPetsScreen({ navigation }: any) {
               })
             }
           >
-            {/* FOTO */}
+
             <View style={styles.petImage}>
               <Ionicons name="paw" size={35} color="#eb9a22" />
             </View>
 
-            {/* INFOS */}
+  
             <View style={styles.petInfo}>
               <Text style={styles.petName}>{item.name}</Text>
 
@@ -94,7 +94,6 @@ export default function MyPetsScreen({ navigation }: any) {
               <Text style={styles.petDetails}>{item.age} anos</Text>
             </View>
 
-            {/* REMOVER */}
             <TouchableOpacity onPress={() => handleRemovePet(item.id)}>
               <Ionicons name="trash-outline" size={24} color="#d62828" />
             </TouchableOpacity>
@@ -102,7 +101,6 @@ export default function MyPetsScreen({ navigation }: any) {
         )}
       />
 
-      {/* BOTÃO ADICIONAR */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate("PetFormScreen")}

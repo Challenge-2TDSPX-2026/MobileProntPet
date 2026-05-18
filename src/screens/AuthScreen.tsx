@@ -18,7 +18,6 @@ export default function LoginScreen({navigation} : any) {
           </Text>
         </View>
 
-
         <View style={styles.roleContainer}>
           <LoginButton
             text="Sou Tutor"
@@ -35,8 +34,7 @@ export default function LoginScreen({navigation} : any) {
             selected={userRole === "vet"}
             onPress={() => setUserRole("vet")}
           />
-
-         
+   
         </View>
 
         {/* Opções de Login Social */}
@@ -46,7 +44,8 @@ export default function LoginScreen({navigation} : any) {
             <Text style={styles.socialButtonText}>Entrar com Google</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.socialButton}>
+          <TouchableOpacity style={styles.socialButton}
+          onPress={() => navigation.navigate("MedicalHistoryScreen")}>
             <Ionicons name="logo-apple" size={20} color="#000" />
             <Text style={styles.socialButtonText}>Entrar com Apple</Text>
           </TouchableOpacity>

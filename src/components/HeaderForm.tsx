@@ -21,7 +21,7 @@ export default function HeaderForm({stepText, title, subtitle }: HeaderFormPros)
 }
 
 const styles = StyleSheet.create({
-  header: { marginBottom: 32, marginTop: 20 },
+  header: { marginBottom: 22},
   stepText: {
     color: "#eb9a22",
     fontWeight: "bold",

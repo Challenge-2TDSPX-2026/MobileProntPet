@@ -25,16 +25,12 @@ export default function TutorRegistration({ navigation }: any) {
             contentContainerStyle={styles.scrollContent}
           >
             <HeaderForm
-              stepText="Passo 1 de 2"
+              stepText="Passo 2 de 3"
               title="Bem-vindo ao Pront Pet"
               subtitle="Escolha como deseja acessar a plataforma"
             />
 
             <View style={styles.form}>
-              
-
-              
-
               
               <Text style={styles.label}>E-mail:</Text>
               <TextInput
@@ -63,7 +59,6 @@ export default function TutorRegistration({ navigation }: any) {
                 onChangeText={(txt) => setFormData({ ...formData, senha: txt })}
               />
               
-
               <MainButton
                 title="Login "
                 onPress={() => navigation.navigate("PetFormScreen")}

@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import {View,Text,TextInput,StyleSheet,ScrollView,KeyboardAvoidingView,Platform} from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import HeaderForm from "../components/HeaderForm";
@@ -18,6 +26,18 @@ export default function TutorRegistration({ navigation }: any) {
 
   const [focusedInput, setFocusedInput] = useState("");
 
+  function clearForm(){
+      setFormData({
+        name: "",
+        cpf: "",
+        phone: "",
+        email: "",
+        senha: "", 
+        password: "",
+        address: "",
+      });
+    }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -30,7 +50,7 @@ export default function TutorRegistration({ navigation }: any) {
             contentContainerStyle={styles.scrollContent}
           >
             <HeaderForm
-              stepText="Passo 1 de 2"
+              stepText="Passo 1 de 3"
               title="Bem-vindo ao Pront Pet"
               subtitle="Escolha como deseja acessar a plataforma"
             />
@@ -42,6 +62,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Nome" && styles.inputFocused,
                 ]}
+                value={formData.name}
                 onFocus={() => setFocusedInput("Nome")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Ex: Iago..."
@@ -56,11 +77,12 @@ export default function TutorRegistration({ navigation }: any) {
                       styles.input,
                       focusedInput === "CPF" && styles.inputFocused,
                     ]}
+                    value={formData.cpf}
                     onFocus={() => setFocusedInput("CPF")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="000.000.000-00"
                     keyboardType="numeric"
-                    onChangeText={(txt) => 
+                    onChangeText={(txt) =>
                       setFormData({ ...formData, cpf: txt })
                     }
                   />
@@ -72,6 +94,7 @@ export default function TutorRegistration({ navigation }: any) {
                       styles.input,
                       focusedInput === "Telefone" && styles.inputFocused,
                     ]}
+                    value={formData.phone}
                     onFocus={() => setFocusedInput("Telefone")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="(11) 99999-9999"
@@ -89,6 +112,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Endereco" && styles.inputFocused,
                 ]}
+                value={formData.address}
                 onFocus={() => setFocusedInput("Endereco")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Rua, número, bairro e cidade"
@@ -104,6 +128,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Email" && styles.inputFocused,
                 ]}
+                value={formData.email}
                 onFocus={() => setFocusedInput("Email")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="seu@email.com"
@@ -117,6 +142,8 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
                 ]}
+          
+                value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Digite sua senha "
@@ -130,18 +157,26 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "ConfSenha" && styles.inputFocused,
                 ]}
+                
+                value={formData.password}
                 onFocus={() => setFocusedInput("ConfSenha")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Confirme sua senha "
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) => setFormData({ ...formData, senha: txt })}
+                onChangeText={(txt) => setFormData({ ...formData, password: txt })}
               />
 
-              <MainButton
-                title="Criar Conta "
-                onPress={() => navigation.navigate("LoginScreen")}
-              />
+              <View style={styles.tutorFormButton}>
+                <MainButton 
+                  title="Limpar"
+                  onPress={() => clearForm()}
+                />
+                <MainButton
+                  title="Criar Conta"
+                  onPress={() => navigation.navigate("LoginScreen")}
+                />
+              </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -163,6 +198,11 @@ const styles = StyleSheet.create({
 
   form: { gap: 15 },
   label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 4 },
+
+  tutorFormButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   input: {
     backgroundColor: "#F3F4F6",
     borderRadius: 10,
