@@ -1,47 +1,51 @@
-import React from 'react';
-import { View, Text, SectionList, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, SectionList, StyleSheet, FlatList } from "react-native";
+import appointment from "../data/appointment.json";
+import AppointmentRow from "../components/AppointmentRow";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-// Exemplo de estrutura seguindo suas preferências de código
 export default function MedicalHistoryScreen() {
-  const medicalData = [
-    {
-      title: "Próximos Compromissos",
-      data: [{ id: '1', type: 'Vacina', title: 'V10 - Reforço', date: '20/06/2026' }]
-    },
-    {
-      title: "Histórico Recente",
-      data: [
-        { id: '2', type: 'Consulta', title: 'Check-up Anual', date: '15/05/2026', vet: 'Dra. Silva' },
-        { id: '3', type: 'Exame', title: 'Hemograma Completo', date: '15/05/2026', status: 'Normal' }
-      ]
-    }
-  ];
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Saúde do Rex</Text>
-      <SectionList
-        sections={medicalData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.title}</Text>
-            <Text style={styles.cardSubtitle}>{item.date} • {item.type}</Text>
-          </View>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-      />
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.appointmentSection}>
+           <Text style={styles.sectionTitle}>Próximas Consultas</Text>
+          <FlatList
+            data={appointment}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <AppointmentRow appointment={item} />}
+          />
+          <Text style={styles.sectionTitle}>Histórico Recente</Text>
+          <FlatList
+            data={appointment}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <AppointmentRow appointment={item} />}
+          />
+          
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F7FA', padding: 20 },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: '#2D3436' },
-  sectionHeader: { fontSize: 16, fontWeight: '600', marginTop: 15, marginBottom: 10, color: '#636E72' },
-  card: { backgroundColor: '#FFF', padding: 15, borderRadius: 12, marginBottom: 10, elevation: 2 },
-  cardTitle: { fontSize: 16, fontWeight: 'bold' },
-  cardSubtitle: { fontSize: 14, color: '#B2BEC3' }
+  container: { flex: 1, backgroundColor: "#F5F7FA", padding: 10 },
+  appointmentSection:{flex: 1},
+  sectionTitle:{ fontSize: 16, fontWeight: '600', marginTop: 15, marginBottom: 10, color: '#636E72' },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#2D3436",
+  },
+  card: {
+    backgroundColor: "#FFF",
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  cardTitle: { fontSize: 16, fontWeight: "bold" },
+  cardSubtitle: { fontSize: 14, color: "#B2BEC3" },
 });

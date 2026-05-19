@@ -1,0 +1,41 @@
+
+
+[
+  {
+    "id": 1,
+    "idMedicalRecord": 101,
+    "idVeterinarian": 5,
+    "consultationType": "Vacina",
+    "idClinic": 2,
+    "consultationDate": "2026-05-18",
+    "symptoms": "Falta de apetite e cansaço",
+    "diagnosis": "Infecção intestinal leve",
+    "observations": "Iniciado tratamento com antibiótico veterinário e repouso.",
+    "attachment": null
+  },
+  {
+    "id": 2,
+    "idMedicalRecord": 101,
+    "idVeterinarian": 3,
+     "consultationType": "Check-up Anual",
+    "idClinic": 1,
+    "consultationDate": "2026-03-10",
+    "symptoms": "Coceira intensa e irritação na pele",
+    "diagnosis": "Dermatite alérgica",
+    "observations": "Uso de shampoo dermatológico recomendado por 30 dias.",
+    "attachment": null
+  },
+  {
+    "id": 3,
+    "idMedicalRecord": 101,
+    "idVeterinarian": 8,
+    "consultationType":"Hemograma Completo",
+    "idClinic": 4,
+    "consultationDate": "2025-12-02",
+    "symptoms": "Dificuldade para caminhar",
+    "diagnosis": "Inflamação nas articulações",
+    "observations": "Iniciado tratamento anti-inflamatório.",
+    "attachment": null
+  }
+  
+]
