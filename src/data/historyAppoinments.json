@@ -1,0 +1,57 @@
+[
+  {
+    "id": 101,
+    "idMedicalRecord": 1,
+    "idVeterinarian": 5,
+    "consultationType": "Consulta Clínica",
+    "consultationDate": "2026-05-12",
+    "symptoms": "Falta de apetite e cansaço",
+    "diagnosis": "Infecção intestinal leve",
+    "observations": "Repouso e hidratação por 5 dias.",
+    "attachment": null
+  },
+  {
+    "id": 102,
+    "idMedicalRecord": 1,
+    "idVeterinarian": 3,
+    "consultationType": "Vacinação",
+    "consultationDate": "2026-04-20",
+    "symptoms": "Vacinação anual",
+    "diagnosis": "Pet saudável",
+    "observations": "Aplicada vacina V10.",
+    "attachment": null
+  },
+  {
+    "id": 103,
+    "idMedicalRecord": 1,
+    "idVeterinarian": 8,
+    "consultationType": "Dermatologia",
+    "consultationDate": "2026-03-15",
+    "symptoms": "Coceira intensa e queda de pelos",
+    "diagnosis": "Dermatite alérgica",
+    "observations": "Uso de shampoo terapêutico.",
+    "attachment": null
+  },
+  {
+    "id": 104,
+    "idMedicalRecord": 1,
+    "idVeterinarian": 6,
+    "consultationType": "Ortopedia",
+    "consultationDate": "2026-02-08",
+    "symptoms": "Dificuldade para caminhar",
+    "diagnosis": "Inflamação articular",
+    "observations": "Iniciado tratamento anti-inflamatório.",
+    "attachment": null
+  },
+  {
+    "id": 105,
+    "idMedicalRecord": 1,
+    "idVeterinarian": 4,
+    "consultationType": "Retorno",
+    "consultationDate": "2026-01-18",
+    "symptoms": "Avaliação pós-tratamento",
+    "diagnosis": "Melhora significativa",
+    "observations": "Continuar medicação por mais 7 dias.",
+    "attachment": null
+  }
+]
