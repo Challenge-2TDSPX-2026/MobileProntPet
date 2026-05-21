@@ -61,7 +61,7 @@ export default function TutorRegistration({ navigation }: any) {
               
               <MainButton
                 title="Login "
-                onPress={() => navigation.navigate("PetFormScreen")}
+                onPress={() => navigation.navigate("VetDashboard")}
               />
             </View>
           </ScrollView>

@@ -14,6 +14,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import MedicalHistoryScreen from './src/screens/MedicalHistoryScreen';
 import AppointmentDetailsScreen from './src/screens/AppointmentDetailsScreen';
 import VetRegistration from './src/screens/VetRegistration';
+import LoginVet from './src/screens/LoginVet';
 
 
 const Stack = createNativeStackNavigator();
@@ -77,9 +78,15 @@ export default function App() {
         component={VetRegistration}
         options={{headerShown: false}}
         />
+
+        <Stack.Screen
+        name='LoginVet'
+        component={LoginVet}
+        options={{headerShown: false}}
+        />
         
     </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer>  
   );
 }
 

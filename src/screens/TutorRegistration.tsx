@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     marginBottom: 8,
+    textDecorationLine: "underline"
   },
 
   form: { gap: 15 },

@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -56,18 +57,18 @@ export default function VetRegistration({ navigation }: any) {
             />
 
             <View style={styles.form}>
-              <Text style={styles.label}>Nome Completo:</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "Nome" && styles.inputFocused,
-                ]}
-                value={formData.name}
-                onFocus={() => setFocusedInput("Nome")}
-                onBlur={() => setFocusedInput(" ")}
-                placeholder="Ex: Iago..."
-                onChangeText={(txt) => setFormData({ ...formData, name: txt })}
-              />
+              <View style={styles.viewLabel}>
+                <View>
+                  <Text style={styles.labelName}>Nome Completo:</Text>
+                </View>
+                <View style={styles.alreadyLogin}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("LoginVet")}
+                  >
+                    <Text style={styles.alreadyLogin}>Já possuo conta!</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
@@ -87,7 +88,6 @@ export default function VetRegistration({ navigation }: any) {
                     }
                   />
                 </View>
-            
 
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Telefone:</Text>
@@ -173,7 +173,7 @@ export default function VetRegistration({ navigation }: any) {
                 <MainButton title="Limpar" onPress={() => clearForm()} />
                 <MainButton
                   title="Criar Conta"
-                  onPress={() => navigation.navigate("LoginScreen")}
+                  onPress={() => navigation.navigate("LoginVet")}
                 />
               </View>
             </View>
@@ -202,6 +202,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  labelName: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 4,
+    width: 150,
+   
+  },
+   alreadyLogin: { 
+    color: "#eb9a22",
+    fontWeight: "bold",
+    fontSize: 14,
+    marginBottom: 8,
+    textDecorationLine: "underline"
+  },
   input: {
     backgroundColor: "#F3F4F6",
     borderRadius: 10,
@@ -214,5 +229,10 @@ const styles = StyleSheet.create({
 
   inputFocused: {
     borderColor: "#eb9a22",
+  },
+  viewLabel: {
+    
+    flexDirection: "row",
+    gap: 100
   },
 });
