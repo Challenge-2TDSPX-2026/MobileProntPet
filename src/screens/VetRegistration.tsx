@@ -69,6 +69,17 @@ export default function VetRegistration({ navigation }: any) {
                   </TouchableOpacity>
                 </View>
               </View>
+              <TextInput
+                style={[
+                  styles.input,
+                  focusedInput === "Nome" && styles.inputFocused,
+                ]}
+                value={formData.name}
+                onFocus={() => setFocusedInput("Nome")}
+                onBlur={() => setFocusedInput(" ")}
+                placeholder="Ex: Iago..."
+                onChangeText={(txt) => setFormData({ ...formData, name: txt })}
+              />
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
@@ -208,14 +219,13 @@ const styles = StyleSheet.create({
     color: "#374151",
     marginBottom: 4,
     width: 150,
-   
   },
-   alreadyLogin: { 
+  alreadyLogin: {
     color: "#eb9a22",
     fontWeight: "bold",
     fontSize: 14,
     marginBottom: 8,
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
   },
   input: {
     backgroundColor: "#F3F4F6",
@@ -231,8 +241,7 @@ const styles = StyleSheet.create({
     borderColor: "#eb9a22",
   },
   viewLabel: {
-    
     flexDirection: "row",
-    gap: 100
+    gap: 100,
   },
 });
