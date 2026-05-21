@@ -44,8 +44,7 @@ export default function LoginScreen({navigation} : any) {
             <Text style={styles.socialButtonText}>Entrar com Google</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.socialButton}
-          onPress={() => navigation.navigate("MedicalHistoryScreen")}>
+          <TouchableOpacity style={styles.socialButton}>
             <Ionicons name="logo-apple" size={20} color="#000" />
             <Text style={styles.socialButtonText}>Entrar com Apple</Text>
           </TouchableOpacity>

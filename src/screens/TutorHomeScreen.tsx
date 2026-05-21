@@ -83,22 +83,22 @@ export default function TutorHomeScreen({ navigation }: any) {
 
         {/* Tab Bar Fake */}
         <View style={styles.tabBar}>
-          <View style={styles.tabItem}>
+          <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="home" size={24} color="#0056b3" />
             <Text style={[styles.tabText, { color: "#0056b3" }]}>Home</Text>
-          </View>
-          <View style={styles.tabItem}>
-            <Ionicons name="clipboard-outline" size={24} color="#8e9aaf" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("MedicalHistoryScreen")} style={styles.tabItem}>
+            <Ionicons  name="clipboard-outline" size={24} color="#8e9aaf" />
             <Text style={styles.tabText}>Saúde</Text>
-          </View>
-          <View style={styles.tabItem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="chatbubble-outline" size={24} color="#8e9aaf" />
             <Text style={styles.tabText}>Chat</Text>
-          </View>
-          <View style={styles.tabItem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="medical-outline" size={24} color="#8e9aaf" />
             <Text style={styles.tabText}>Clínica</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
