@@ -32,7 +32,10 @@ export default function LoginScreen({navigation} : any) {
             text="Sou Veterinário"
             icon="medical"
             selected={userRole === "vet"}
-            onPress={() => setUserRole("vet")}
+            onPress={() => {setUserRole("vet");
+            navigation.navigate('VetRegistration')}
+            
+            }
           />
    
         </View>

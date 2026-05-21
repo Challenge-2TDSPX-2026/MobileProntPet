@@ -7,18 +7,16 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
 } from "react-native";
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
-import { red } from "react-native-reanimated/lib/typescript/Colors";
 
-export default function TutorRegistration({ navigation }: any) {
+export default function VetRegistration({ navigation }: any) {
   const [formData, setFormData] = useState({
     name: "",
-    cpf: "",
+    crmv: "",
     phone: "",
     email: "",
     senha: "",
@@ -31,7 +29,7 @@ export default function TutorRegistration({ navigation }: any) {
   function clearForm() {
     setFormData({
       name: "",
-      cpf: "",
+      crmv: "",
       phone: "",
       email: "",
       senha: "",
@@ -58,18 +56,7 @@ export default function TutorRegistration({ navigation }: any) {
             />
 
             <View style={styles.form}>
-              <View style={styles.viewLabel}>
-                <View>
-                  <Text style={styles.labelName}>Nome Completo:</Text>
-                </View>
-                <View style={styles.alreadyLogin}>
-                  <TouchableOpacity 
-                  onPress={() => navigation.navigate("LoginScreen")}>
-                  <Text style={styles.alreadyLogin}>Já possuo conta!</Text>
-                  
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <Text style={styles.label}>Nome Completo:</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -84,22 +71,24 @@ export default function TutorRegistration({ navigation }: any) {
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
-                  <Text style={styles.label}>CPF:</Text>
+                  <Text style={styles.label}>CRMV:</Text>
                   <TextInput
                     style={[
                       styles.input,
-                      focusedInput === "CPF" && styles.inputFocused,
+                      focusedInput === "CRMV" && styles.inputFocused,
                     ]}
-                    value={formData.cpf}
-                    onFocus={() => setFocusedInput("CPF")}
+                    value={formData.crmv}
+                    onFocus={() => setFocusedInput("CRMV")}
                     onBlur={() => setFocusedInput(" ")}
-                    placeholder="000.000.000-00"
+                    placeholder="000000"
                     keyboardType="numeric"
                     onChangeText={(txt) =>
-                      setFormData({ ...formData, cpf: txt })
+                      setFormData({ ...formData, crmv: txt })
                     }
                   />
                 </View>
+            
+
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Telefone:</Text>
                   <TextInput
@@ -206,23 +195,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
-  alreadyLogin: { 
-    color: "#eb9a22",
-    fontWeight: "bold",
-    fontSize: 14,
-    marginBottom: 8,
-  },
-
   form: { gap: 15 },
   label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 4 },
-  labelName: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
-    marginBottom: 4,
-    width: 150,
-   
-  },
 
   tutorFormButton: {
     flexDirection: "row",
@@ -240,11 +214,5 @@ const styles = StyleSheet.create({
 
   inputFocused: {
     borderColor: "#eb9a22",
-  },
-
-  viewLabel: {
-    
-    flexDirection: "row",
-    gap: 100
   },
 });
