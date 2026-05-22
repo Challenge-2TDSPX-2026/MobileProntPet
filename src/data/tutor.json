@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Gustavo Araujo",
+    "cpf": "123.456.789-00",
+    "phone": "(11) 99999-1111",
+    "email": "gustavo@gmail.com",
+    "password": "123456",
+    "address": "Rua das Flores, 120 - São Paulo"
+  },
+  {
+    "id": 2,
+    "name": "Mariana Souza",
+    "cpf": "987.654.321-00",
+    "phone": "(11) 98888-2222",
+    "email": "mariana@gmail.com",
+    "password": "654321",
+    "address": "Av. Paulista, 500 - São Paulo"
+  }
+]

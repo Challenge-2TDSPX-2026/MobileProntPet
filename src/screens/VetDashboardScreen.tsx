@@ -54,7 +54,7 @@ export default function VetDashboardScreen({ navigation }: any) {
             
             {/* Acesso Rápido */}
             <View style={styles.quickAccessRow}>
-              <TouchableOpacity style={styles.quickAccessCard}>
+              <TouchableOpacity onPress={()=> navigation.navigate("TutorsListScreen") } style={styles.quickAccessCard}>
                 <Ionicons name="people" size={32} color="#eb9a22" />
                 <Text style={styles.quickAccessText}>Tutores{'\n'}& Pets</Text>
               </TouchableOpacity>
@@ -65,7 +65,7 @@ export default function VetDashboardScreen({ navigation }: any) {
             {/* Consultas a Ocorrer */}
             <View style={styles.sectionHeaderRow}>
               <Text style={styles.sectionTitle}>Próximas Consultas</Text>
-              <Text style={styles.countBadge}>{upcomingConsultations.length}</Text>
+
             </View>
 
             {upcomingConsultations.map((item) => (

@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "idTutor": 1,
+    "name": "Rex",
+    "species": "Cachorro",
+    "breed": "Golden Retriever",
+    "birthDate": "2022-05-10",
+    "weight": "32",
+    "sex": "Macho"
+  },
+  {
+    "id": 2,
+    "idTutor": 2,
+    "name": "Luna",
+    "species": "Gato",
+    "breed": "Siamês",
+    "birthDate": "2023-01-20",
+    "weight": "4",
+    "sex": "Fêmea"
+  },
+  {
+    "id": 3,
+    "idTutor": 2,
+    "name": "Thor",
+    "species": "Cachorro",
+    "breed": "Bulldog",
+    "birthDate": "2021-11-15",
+    "weight": "20",
+    "sex": "Macho"
+  }
+]
