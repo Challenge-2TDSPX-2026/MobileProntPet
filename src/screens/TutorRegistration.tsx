@@ -28,6 +28,59 @@ export default function TutorRegistration({ navigation }: any) {
 
   const [focusedInput, setFocusedInput] = useState("");
 
+  const [errors, setErrors] = useState<Record<string, string>> ({});
+
+  function validateForm() {
+    let newErrors: Record<string, string> = {};
+
+    // validação para nome
+    if (!formData.name.trim()){
+      newErrors.name = "O nome é obrigatório!";
+    }
+
+    // validação para cpf
+    if (formData.cpf.trim().length < 11) {
+      newErrors.cpf = "CPF inválido!";
+    }
+
+    // validação de telefone
+    if (!formData.phone.trim()) {
+      newErrors.phone = "O Telefone é obrigatório!"
+    }
+
+    // validação para endereço
+    if (!formData.address.trim()){
+      newErrors.address = "O endereço é obrigatório!"
+    }
+
+    // validação para email
+    if (!formData.email.trim()){
+      newErrors.email = "O email é obrigatório!"
+    }
+
+    // validação de senha
+    if (formData.senha.length < 6) {
+      newErrors.senha = "A senha deve ter no mínimo 6 caracteres.";
+    }
+
+    // Validação de Confirmação de Senha
+    if (formData.senha !== formData.password) {
+      newErrors.password = "As senhas não coincidem.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+
+  }
+
+  function handleRegister() {
+    const isValid = validateForm();
+    
+    if (isValid) {
+      navigation.navigate("LoginScreen");
+    }
+  }
+
   function clearForm() {
     setFormData({
       name: "",
@@ -74,13 +127,18 @@ export default function TutorRegistration({ navigation }: any) {
                 style={[
                   styles.input,
                   focusedInput === "Nome" && styles.inputFocused,
+                  errors.name && styles.inputError
                 ]}
                 value={formData.name}
                 onFocus={() => setFocusedInput("Nome")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Ex: Iago..."
-                onChangeText={(txt) => setFormData({ ...formData, name: txt })}
+                onChangeText={(txt) => {
+                  setFormData({ ...formData, name: txt });
+                  if (errors.name) setErrors({ ...errors, name: "" });
+                }}
               />
+              {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
@@ -89,33 +147,39 @@ export default function TutorRegistration({ navigation }: any) {
                     style={[
                       styles.input,
                       focusedInput === "CPF" && styles.inputFocused,
+                      errors.cpf && styles.inputError
                     ]}
                     value={formData.cpf}
                     onFocus={() => setFocusedInput("CPF")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="000.000.000-00"
                     keyboardType="numeric"
-                    onChangeText={(txt) =>
-                      setFormData({ ...formData, cpf: txt })
-                    }
+                    onChangeText={(txt) => {
+                      setFormData({ ...formData, cpf: txt });
+                      if (errors.cpf) setErrors({ ...errors, cpf: "" });
+                    }}
                   />
-                </View>
+                  {errors.cpf && <Text style={[styles.errorText, { marginTop: 4 }]}>{errors.cpf}</Text>}                
+                  </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Telefone:</Text>
                   <TextInput
                     style={[
                       styles.input,
                       focusedInput === "Telefone" && styles.inputFocused,
+                      errors.phone && styles.inputError
                     ]}
                     value={formData.phone}
                     onFocus={() => setFocusedInput("Telefone")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="(11) 99999-9999"
                     keyboardType="phone-pad"
-                    onChangeText={(txt) =>
-                      setFormData({ ...formData, phone: txt })
-                    }
+                    onChangeText={(txt) => {
+                      setFormData({ ...formData, phone: txt });
+                      if (errors.phone) setErrors({ ...errors, phone: "" });
+                    }}
                   />
+                  {errors.phone && <Text style={[styles.errorText, { marginTop: 4 }]}>{errors.phone}</Text>}                
                 </View>
               </View>
 
@@ -124,22 +188,26 @@ export default function TutorRegistration({ navigation }: any) {
                 style={[
                   styles.input,
                   focusedInput === "Endereco" && styles.inputFocused,
+                  errors.address && styles.inputError
                 ]}
                 value={formData.address}
                 onFocus={() => setFocusedInput("Endereco")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Rua, número, bairro e cidade"
                 multiline
-                onChangeText={(txt) =>
-                  setFormData({ ...formData, address: txt })
-                }
+                onChangeText={(txt) => {
+                  setFormData({ ...formData, address: txt });
+                  if (errors.address) setErrors({ ...errors, address: "" });
+                }}
               />
+              {errors.address && <Text style={styles.errorText}>{errors.address}</Text>}                
 
               <Text style={styles.label}>E-mail:</Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "Email" && styles.inputFocused,
+                  errors.email && styles.inputError
                 ]}
                 value={formData.email}
                 onFocus={() => setFocusedInput("Email")}
@@ -147,13 +215,18 @@ export default function TutorRegistration({ navigation }: any) {
                 placeholder="seu@email.com"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                onChangeText={(txt) => setFormData({ ...formData, email: txt })}
+                onChangeText={(txt) => { 
+                  setFormData({ ...formData, email: txt });
+                  if (errors.email) setErrors({ ...errors, email: "" });
+              }}               
               />
+              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}                
               <Text style={styles.label}>Senha:</Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
+                  errors.senha && styles.inputError
                 ]}
                 value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
@@ -161,13 +234,18 @@ export default function TutorRegistration({ navigation }: any) {
                 placeholder="Digite sua senha "
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) => setFormData({ ...formData, senha: txt })}
+                onChangeText={(txt) => { 
+                  setFormData({ ...formData, senha: txt });
+                  if (errors.senha) setErrors({ ...errors, senha: "" });
+              }}
               />
+              {errors.senha && <Text style={styles.errorText}>{errors.senha}</Text>}
               <Text style={styles.label}>Confirme sua senha: </Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "ConfSenha" && styles.inputFocused,
+                  errors.password && styles.inputError
                 ]}
                 value={formData.password}
                 onFocus={() => setFocusedInput("ConfSenha")}
@@ -175,16 +253,17 @@ export default function TutorRegistration({ navigation }: any) {
                 placeholder="Confirme sua senha "
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) =>
-                  setFormData({ ...formData, password: txt })
-                }
+                onChangeText={(txt) => {
+                  setFormData({ ...formData, password: txt });
+                  if (errors.password) setErrors({ ...errors, password: "" });
+                }}
               />
-
+              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
               <View style={styles.tutorFormButton}>
                 <MainButton title="Limpar" onPress={() => clearForm()} />
                 <MainButton
                   title="Criar Conta"
-                  onPress={() => navigation.navigate("LoginScreen")}
+                  onPress={handleRegister}
                 />
               </View>
             </View>
@@ -204,6 +283,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     marginBottom: 8,
+  },
+
+  inputError: {
+    borderColor: "#EF4444", 
+    borderWidth: 1,
+  },
+  errorText: {
+    color: "#EF4444",
+    fontSize: 12,
+    marginTop: -10, 
+    marginBottom: 10,
+    marginLeft: 4,
   },
 
   alreadyLogin: { 
