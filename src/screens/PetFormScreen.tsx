@@ -12,12 +12,13 @@ export default function PetFormScreen({ navigation }: any) {
   const [form, setForm] = useState({
     name: "",
     species: "Cachorro",
+    customSpecies: "",
     breed: "",
     birthDate: new Date(),
     age: "",
     weight: "",
     sex: "Macho",
-    temperature: ""
+    temperature: "",
   });
 
   const [focusedInput, setFocusedInput] = useState("");
@@ -68,6 +69,7 @@ export default function PetFormScreen({ navigation }: any) {
           />
 
           <Text style={styles.label}>Espécie *</Text>
+
           <Picker
             selectedValue={form.species}
             onValueChange={(itemValue) =>
@@ -78,6 +80,27 @@ export default function PetFormScreen({ navigation }: any) {
             <Picker.Item label="Gato" value="Gato" />
             <Picker.Item label="Outro" value="Outro" />
           </Picker>
+
+            {form.species == "Outro" && (
+              <>
+                <Text style={styles.label}> Qual a espécie do pet?</Text>
+
+                <TextInput
+                  style={[
+                    styles.input,
+                    focusedInput === "OutraEspecie" && styles.inputFocused,
+                  ]}
+                  placeholder="Ex: Coelho, Papagaio..."
+                  value={form.customSpecies}
+                  onFocus={()=> setFocusedInput("OutraEspecie")}
+                  onBlur={()=> setFocusedInput("")}
+                  onChangeText={(t)=> setForm({...form, customSpecies:t})}
+                /> 
+
+                
+              </>
+            )}
+          
 
           <Text style={styles.label}>Raça</Text>
           <TextInput
@@ -99,7 +122,7 @@ export default function PetFormScreen({ navigation }: any) {
             ]}
             onFocus={() => setFocusedInput("Temperatura")}
             onBlur={() => setFocusedInput(" ")}
-             keyboardType="numeric"
+            keyboardType="numeric"
             value={form.temperature}
             onChangeText={(t) => setForm({ ...form, temperature: t })}
           />
@@ -168,7 +191,7 @@ export default function PetFormScreen({ navigation }: any) {
               <Text>Nome: {form.name}</Text>
             </Text>
 
-            <Text style={styles.label}>Espécie: {form.species}</Text>
+            <Text style={styles.label}>Espécie: {form.species === "Outro" ? form.customSpecies : form.species}</Text>
 
             <Text style={styles.label}>Raça: {form.breed}</Text>
 
