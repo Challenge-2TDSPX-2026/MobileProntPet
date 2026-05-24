@@ -9,13 +9,13 @@
 
 ---
 
-# 🔗 Repositório do Projeto
+## 🔗 Repositório do Projeto
 - GitHub: 
 https://github.com/2TDSPX/challenge12-prontpet.git
 
 ---
 
-# 🔗 Link para o Vídeo demonstrativo
+## 🔗 Link para o Vídeo demonstrativo
 - Youtube: 
 
 
