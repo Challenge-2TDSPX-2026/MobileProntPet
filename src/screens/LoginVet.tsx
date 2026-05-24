@@ -7,7 +7,7 @@ import MainButton from "../components/MainButton";
 
 export default function TutorRegistration({ navigation }: any) {
   const [formData, setFormData] = useState({
-    email: "",
+    crmv: "",
     senha: "",
   });
 
@@ -32,18 +32,18 @@ export default function TutorRegistration({ navigation }: any) {
 
             <View style={styles.form}>
               
-              <Text style={styles.label}>E-mail:</Text>
+              <Text style={styles.label}>CRMV:</Text>
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === "Email" && styles.inputFocused,
+                  focusedInput === "CRMV" && styles.inputFocused,
                 ]}
-                onFocus={() => setFocusedInput("Email")}
+                onFocus={() => setFocusedInput("CRMV")}
                 onBlur={() => setFocusedInput(" ")}
-                placeholder="seu@email.com"
+                placeholder="Digite seu CRMV"
                 autoCapitalize="none"
-                keyboardType="email-address"
-                onChangeText={(txt) => setFormData({ ...formData, email: txt })}
+                keyboardType="numeric"
+                onChangeText={(txt) => setFormData({ ...formData, crmv: txt })}
               />
               <Text style={styles.label}>Senha:</Text>
               <TextInput

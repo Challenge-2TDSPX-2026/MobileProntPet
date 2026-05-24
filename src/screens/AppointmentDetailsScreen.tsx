@@ -81,18 +81,6 @@ export default function AppointmentDetailsScreen() {
 
         </View>
 
-        <View style={styles.card}>
-
-          <Text style={styles.label}>
-            Veterinário ID
-          </Text>
-
-          <Text style={styles.content}>
-            #{appointment.idVeterinarian}
-          </Text>
-
-        </View>
-
       </ScrollView>
 
     </SafeAreaView>

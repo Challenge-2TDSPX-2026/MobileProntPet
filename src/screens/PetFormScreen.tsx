@@ -14,26 +14,30 @@ export default function PetFormScreen({ navigation }: any) {
     species: "Cachorro",
     breed: "",
     birthDate: new Date(),
-    age:"",
+    age: "",
     weight: "",
     sex: "Macho",
+    temperature: ""
   });
 
   const [focusedInput, setFocusedInput] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  function calculateAge(birthDate: Date){
+  function calculateAge(birthDate: Date) {
     const today = new Date();
 
     let age = today.getFullYear() - birthDate.getFullYear();
 
     const monthDiferrence = today.getMonth() - birthDate.getMonth();
 
-    if(monthDiferrence < 0 || (monthDiferrence == 0 && today.getDate() < birthDate.getDate())){
+    if (
+      monthDiferrence < 0 ||
+      (monthDiferrence == 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    
-    return form.age = age.toString() ;
+
+    return (form.age = age.toString());
   }
 
   return (
@@ -85,6 +89,19 @@ export default function PetFormScreen({ navigation }: any) {
             onBlur={() => setFocusedInput(" ")}
             value={form.breed}
             onChangeText={(t) => setForm({ ...form, breed: t })}
+          />
+
+          <Text style={styles.label}>Temperatura</Text>
+          <TextInput
+            style={[
+              styles.input,
+              focusedInput === "Temperatura" && styles.inputFocused,
+            ]}
+            onFocus={() => setFocusedInput("Temperatura")}
+            onBlur={() => setFocusedInput(" ")}
+             keyboardType="numeric"
+            value={form.temperature}
+            onChangeText={(t) => setForm({ ...form, temperature: t })}
           />
 
           <View style={styles.row}>
@@ -148,16 +165,14 @@ export default function PetFormScreen({ navigation }: any) {
             />
 
             <Text style={styles.label}>
-              <Text>
-                 Nome: {form.name}
-              </Text>
-             
-              
+              <Text>Nome: {form.name}</Text>
             </Text>
 
             <Text style={styles.label}>Espécie: {form.species}</Text>
 
             <Text style={styles.label}>Raça: {form.breed}</Text>
+
+            <Text style={styles.label}>Temperatura: {form.temperature}</Text>
 
             <Text style={styles.label}>
               Data de Nascimento:

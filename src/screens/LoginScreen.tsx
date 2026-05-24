@@ -61,7 +61,13 @@ export default function TutorRegistration({ navigation }: any) {
               
               <MainButton
                 title="Login "
-                onPress={() => navigation.navigate("PetFormScreen")}
+                onPress={() => navigation.reset({
+                  index: 1,
+                  routes:[
+                    {name: "AuthScreen"},
+                    {name: "PetFormScreen"},
+                  ]
+                })}
               />
             </View>
           </ScrollView>

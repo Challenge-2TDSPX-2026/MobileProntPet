@@ -2,7 +2,7 @@ import React from "react";
 import {View,Text,StyleSheet,ScrollView, TouchableOpacity} from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 
 import { useRoute } from "@react-navigation/native";
 
@@ -72,7 +72,7 @@ export default function TutorHomeScreen({ navigation }: any) {
               </View>
               <View style={styles.indicatorBox}>
                 <Text style={styles.indicatorLabel}>Temperatura</Text>
-                <Text style={styles.indicatorValue}>--</Text>
+                <Text style={styles.indicatorValue}>{pet.temperature}</Text>
                 <Text style={styles.indicatorStatus}>Normal</Text>
               </View>
             </View>
