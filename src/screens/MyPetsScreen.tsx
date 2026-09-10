@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+
 import {
   View,
   Text,
@@ -9,65 +10,90 @@ import {
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+
+import { usePets, useDeletePet } from "../hooks/usePets";
 
 export default function MyPetsScreen({ navigation }: any) {
-  const [pets, setPets] = useState<any[]>([]);
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = usePets();
 
-  useFocusEffect(
-    useCallback(() => {
-      async function loadPets() {
-        const storedPets = await AsyncStorage.getItem("pets");
+  const deletePetMutation = useDeletePet();
 
-        if (storedPets) {
-          setPets(JSON.parse(storedPets));
-        }
-      }
+  const pets = data?.content ?? [];
 
-      loadPets();
-    }, []),
-  );
-
-  async function handleRemovePet(id:number) {
-    const updatedPets = pets.filter(
-      (pet) => pet.id !== id
-    );
-
-    setPets(updatedPets);
-
-    await AsyncStorage.setItem(
-      "pets", 
-      JSON.stringify(updatedPets)
-  );
+  function handleRemovePet(id: number) {
+    deletePetMutation.mutate(id);
   }
-  
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>
+            Carregando seus pets...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.errorText}>
+            Não foi possível carregar os pets.
+          </Text>
+
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => refetch()}
+          >
+            <Text style={styles.retryButtonText}>
+              Tentar novamente
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-  
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Meus Pets</Text>
+        <Text style={styles.headerTitle}>
+          Meus Pets
+        </Text>
 
-        <Text style={styles.headerSubtitle}>Gerencie os pets cadastrados</Text>
+        <Text style={styles.headerSubtitle}>
+          Gerencie os pets cadastrados
+        </Text>
       </View>
 
-      {/* LISTA */}
       <FlatList
         data={pets}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-        /*
-          CASO NÃO TENHA PETS
-        */
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="paw-outline" size={70} color="#D1D5DB" />
+            <Ionicons
+              name="paw-outline"
+              size={70}
+              color="#D1D5DB"
+            />
 
-            <Text style={styles.emptyTitle}>Nenhum pet cadastrado</Text>
+            <Text style={styles.emptyTitle}>
+              Nenhum pet cadastrado
+            </Text>
 
-            <Text style={styles.emptySubtitle}>Adicione seu primeiro pet</Text>
+            <Text style={styles.emptySubtitle}>
+              Adicione seu primeiro pet
+            </Text>
           </View>
         }
         renderItem={({ item }) => (
@@ -75,26 +101,45 @@ export default function MyPetsScreen({ navigation }: any) {
             style={styles.petCard}
             onPress={() =>
               navigation.navigate("TutorHomeScreen", {
-                pet: item,
+                petId: item.id,
               })
             }
           >
-
             <View style={styles.petImage}>
-              <Ionicons name="paw" size={35} color="#eb9a22" />
+              <Ionicons
+                name="paw"
+                size={35}
+                color="#eb9a22"
+              />
             </View>
 
-  
             <View style={styles.petInfo}>
-              <Text style={styles.petName}>{item.name}</Text>
+              <Text style={styles.petName}>
+                {item.name}
+              </Text>
 
-              <Text style={styles.petDetails}>{item.breed}</Text>
+              <Text style={styles.petDetails}>
+                {item.breed}
+              </Text>
 
-              <Text style={styles.petDetails}>{item.age} anos</Text>
+              <Text style={styles.petDetails}>
+                {item.species}
+              </Text>
+
+              <Text style={styles.petDetails}>
+                {item.weight} kg
+              </Text>
             </View>
 
-            <TouchableOpacity onPress={() => handleRemovePet(item.id)}>
-              <Ionicons name="trash-outline" size={24} color="#d62828" />
+            <TouchableOpacity
+              onPress={() => handleRemovePet(item.id)}
+              disabled={deletePetMutation.isPending}
+            >
+              <Ionicons
+                name="trash-outline"
+                size={24}
+                color="#d62828"
+              />
             </TouchableOpacity>
           </TouchableOpacity>
         )}
@@ -102,11 +147,19 @@ export default function MyPetsScreen({ navigation }: any) {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate("PetFormScreen")}
+        onPress={() =>
+          navigation.navigate("PetFormScreen")
+        }
       >
-        <Ionicons name="add" size={26} color="white" />
+        <Ionicons
+          name="add"
+          size={26}
+          color="white"
+        />
 
-        <Text style={styles.addButtonText}>Novo Pet</Text>
+        <Text style={styles.addButtonText}>
+          Novo Pet
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -161,6 +214,36 @@ const styles = StyleSheet.create({
     color: "#6B7280",
   },
 
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  loadingText: {
+    fontSize: 17,
+    color: "#6B7280",
+  },
+
+  errorText: {
+    fontSize: 17,
+    color: "#d62828",
+    textAlign: "center",
+  },
+
+  retryButton: {
+    marginTop: 15,
+    backgroundColor: "#eb9a22",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+
+  retryButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
   petCard: {
     backgroundColor: "white",
     borderRadius: 20,
@@ -170,6 +253,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
 
     shadowColor: "#000",
+
     shadowOffset: {
       width: 0,
       height: 2,
@@ -185,12 +269,9 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-
     backgroundColor: "#fff4e6",
-
     justifyContent: "center",
     alignItems: "center",
-
     marginRight: 15,
   },
 
@@ -213,21 +294,17 @@ const styles = StyleSheet.create({
 
   addButton: {
     position: "absolute",
-
     bottom: 25,
     right: 25,
-
     backgroundColor: "#eb9a22",
-
     flexDirection: "row",
     alignItems: "center",
-
     paddingHorizontal: 20,
     paddingVertical: 14,
-
     borderRadius: 30,
 
     shadowColor: "#000",
+
     shadowOffset: {
       width: 0,
       height: 3,
@@ -246,3 +323,4 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+

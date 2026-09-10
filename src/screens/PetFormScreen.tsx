@@ -5,10 +5,13 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCreatePet } from "../hooks/usePets";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function PetFormScreen({ navigation }: any) {
+
+  const createPetMutation = useCreatePet();
+
   const [form, setForm] = useState({
     name: "",
     species: "Cachorro",
@@ -17,7 +20,7 @@ export default function PetFormScreen({ navigation }: any) {
     birthDate: new Date(),
     age: "",
     weight: "",
-    sex: "Macho",
+    sex: "Male",
     temperature: "",
   });
 
@@ -174,8 +177,9 @@ export default function PetFormScreen({ navigation }: any) {
             selectedValue={form.sex}
             onValueChange={(itemValue) => setForm({ ...form, sex: itemValue })}
           >
-            <Picker.Item label="Macho" value="Macho" />
+            <Picker.Item label="Male" value="Male" />
             <Picker.Item label="Fêmea" value="Fêmea" />
+            <Picker.Item label="Outro" value="Other" />
           </Picker>
 
           <View style={styles.line}></View>
@@ -210,26 +214,35 @@ export default function PetFormScreen({ navigation }: any) {
             <Text style={styles.label}>Sexo: {form.sex}</Text>
           </View>
           <MainButton
-            title="Adicionar Novo Pet "
-            onPress={async () => {
-              const newPet = {
-                ...form,
-                id: Date.now(),
+            title="Adicionar Novo Pet"
+            onPress={() => {
+              const species = 
+              form.species === "Outro"
+              ? form.customSpecies : form.species;
+
+              const petData = {
+                name : form.name,
+                species: species,
+                breed: form.breed,
+                birthDate : form.birthDate
+                .toISOString()
+                .split("T")[0],
+                weight: Number(form.weight.replace(",", ".")
+                ),
+                sex: form.sex as "Male" | "Female" | "Other",
               };
 
-              try {
-                const storedPets = await AsyncStorage.getItem("pets");
+              console.log("Enviado pet:", petData);
 
-                const pets = storedPets ? JSON.parse(storedPets) : [];
-
-                const updatedPets = [...pets, newPet];
-
-                await AsyncStorage.setItem("pets", JSON.stringify(updatedPets));
-
-                navigation.navigate("MyPetsScreen");
-              } catch (error) {
-                console.log(error);
-              }
+              createPetMutation.mutate(petData, {
+                onSuccess: (pet) => {
+                  console.log("Pet cadastrado com sucesso:", pet);
+                  navigation.navigate("MyPetsScreen");
+                },
+                onError: (error) => {
+                  console.log("Erro ao cadastrar pet", error)
+                }
+              })
             }}
           />
         </ScrollView>
