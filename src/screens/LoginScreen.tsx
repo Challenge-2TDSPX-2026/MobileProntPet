@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 import {
@@ -10,12 +9,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableOpacity
 } from "react-native";
 
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
@@ -33,10 +30,7 @@ export default function LoginScreen({ navigation }: any) {
 
   const handleLogin = () => {
     if (!formData.email || !formData.senha) {
-      Alert.alert(
-        "Atenção",
-        "Preencha o e-mail e a senha."
-      );
+      Alert.alert("Atenção", "Preencha o e-mail e a senha.");
       return;
     }
 
@@ -49,20 +43,14 @@ export default function LoginScreen({ navigation }: any) {
         onSuccess: () => {
           navigation.reset({
             index: 1,
-            routes: [
-              { name: "AuthScreen" },
-              { name: "PetFormScreen" },
-            ],
+            routes: [{ name: "AuthScreen" }, { name: "MyPetsScreen" }],
           });
         },
 
         onError: (error) => {
-          Alert.alert(
-            "Erro ao fazer login",
-            error.message
-          );
+          Alert.alert("Erro ao fazer login", error.message);
         },
-      }
+      },
     );
   };
 
@@ -70,11 +58,7 @@ export default function LoginScreen({ navigation }: any) {
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView
-          behavior={
-            Platform.OS === "ios"
-              ? "padding"
-              : "height"
-          }
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.container}
         >
           <ScrollView
@@ -86,21 +70,21 @@ export default function LoginScreen({ navigation }: any) {
               title="Bem-vindo ao Pront Pet"
               subtitle="Preencha os campos abaixo para acessar sua conta"
             />
+            <TouchableOpacity
+              onPress={() => navigation.navigate("TutorForm")}
+            >
+              <Text style={styles.alreadyLogin}>Já possuo conta!</Text>
+            </TouchableOpacity>
 
             <View style={styles.form}>
-              <Text style={styles.label}>
-                E-mail:
-              </Text>
+              <Text style={styles.label}>E-mail:</Text>
 
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === "Email" &&
-                    styles.inputFocused,
+                  focusedInput === "Email" && styles.inputFocused,
                 ]}
-                onFocus={() =>
-                  setFocusedInput("Email")
-                }
+                onFocus={() => setFocusedInput("Email")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="seu@email.com"
                 autoCapitalize="none"
@@ -114,19 +98,14 @@ export default function LoginScreen({ navigation }: any) {
                 }
               />
 
-              <Text style={styles.label}>
-                Senha:
-              </Text>
+              <Text style={styles.label}>Senha:</Text>
 
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === "Senha" &&
-                    styles.inputFocused,
+                  focusedInput === "Senha" && styles.inputFocused,
                 ]}
-                onFocus={() =>
-                  setFocusedInput("Senha")
-                }
+                onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="Digite sua senha"
                 autoCapitalize="none"
@@ -141,11 +120,7 @@ export default function LoginScreen({ navigation }: any) {
               />
 
               <MainButton
-                title={
-                  loginMutation.isPending
-                    ? "Entrando..."
-                    : "Login"
-                }
+                title={loginMutation.isPending ? "Entrando..." : "Login"}
                 onPress={handleLogin}
               />
             </View>
@@ -198,5 +173,11 @@ const styles = StyleSheet.create({
   inputFocused: {
     borderColor: "#eb9a22",
   },
+  alreadyLogin: { 
+    color: "#eb9a22",
+    fontWeight: "bold",
+    fontSize: 14,
+    marginBottom: 8,
+    textDecorationLine: "underline"
+  },
 });
-

@@ -28,6 +28,12 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator>
+           <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          
           <Stack.Screen
             name="AuthScreen"
             component={AuthScreen}
@@ -64,11 +70,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
-          <Stack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
+         
 
           <Stack.Screen
             name="MedicalHistoryScreen"

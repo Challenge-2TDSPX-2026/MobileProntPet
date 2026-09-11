@@ -1,15 +1,53 @@
 import React from "react";
-import {View,Text,StyleSheet,ScrollView, TouchableOpacity} from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-
-
+import { usePet } from "../hooks/usePets";
 import { useRoute } from "@react-navigation/native";
 
-export default function TutorHomeScreen({ navigation }: any) {
+function calculateAge(birthDate: string) {
+  const birth = new Date(birthDate);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDifference = today.getMonth() - birth.getMonth();
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birth.getDate())
+  ) {
+    age--;
+  }
+  return age;
+}
 
-  const route = useRoute();
-  const {pet} = route.params as any;
+export default function TutorHomeScreen({ navigation }: any) {
+  const route = useRoute<any>();
+  const { petId } = route.params;
+  const { data: pet, isLoading, isError } = usePet(petId);
+  if (isLoading) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <Text>Carregando pet...</Text>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+  if (isError || !pet) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <Text> Não foi possível carregar os dados do pet. </Text>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+  const age = calculateAge(pet.birthDate);
 
   return (
     <SafeAreaProvider>
@@ -24,7 +62,9 @@ export default function TutorHomeScreen({ navigation }: any) {
               <View style={styles.profileText}>
                 <Text style={styles.welcomeTitle}>Bem Vindo</Text>
                 <Text style={styles.petName}>{pet.name}</Text>
-                <Text style={styles.petInfo}>{pet.breed} • {pet.age} anos</Text>
+                <Text style={styles.petInfo}>
+                  {pet.breed} • {age} anos
+                </Text>
               </View>
             </View>
           </View>
@@ -32,7 +72,12 @@ export default function TutorHomeScreen({ navigation }: any) {
           <View style={styles.content}>
             {/* Atenção Necessária */}
             <Text style={styles.sectionTitle}>Atenção Necessária</Text>
-            <TouchableOpacity style={[styles.card, styles.alertCard]} onPress={()=> navigation.navigate("PetVaccinesScreen", {pet: pet})}>
+            <TouchableOpacity
+              style={[styles.card, styles.alertCard]}
+              onPress={() =>
+                navigation.navigate("PetVaccinesScreen", { pet: pet })
+              }
+            >
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons
                   name="needle"
@@ -72,12 +117,10 @@ export default function TutorHomeScreen({ navigation }: any) {
               </View>
               <View style={styles.indicatorBox}>
                 <Text style={styles.indicatorLabel}>Temperatura</Text>
-                <Text style={styles.indicatorValue}>{pet.temperature}</Text>
+
                 <Text style={styles.indicatorStatus}>Normal</Text>
               </View>
             </View>
-
-            
           </View>
         </ScrollView>
 
@@ -87,8 +130,11 @@ export default function TutorHomeScreen({ navigation }: any) {
             <Ionicons name="home" size={24} color="#0056b3" />
             <Text style={[styles.tabText, { color: "#0056b3" }]}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("MedicalHistoryScreen")} style={styles.tabItem}>
-            <Ionicons  name="clipboard-outline" size={24} color="#8e9aaf" />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("MedicalHistoryScreen")}
+            style={styles.tabItem}
+          >
+            <Ionicons name="clipboard-outline" size={24} color="#8e9aaf" />
             <Text style={styles.tabText}>Saúde</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.tabItem}>
@@ -115,13 +161,10 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-
-  
   },
   profileRow: {
     flexDirection: "row",
     alignItems: "center",
-
   },
   avatarContainer: {
     width: 70,
@@ -134,10 +177,10 @@ const styles = StyleSheet.create({
   profileText: {
     marginLeft: 15,
   },
-  welcomeTitle:{
+  welcomeTitle: {
     fontSize: 20,
-    fontWeight:"bold",
-    color: "#1F2937"
+    fontWeight: "bold",
+    color: "#1F2937",
   },
   petName: {
     fontSize: 22,
@@ -203,7 +246,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     height: "30%",
-    alignItems: "center"
+    alignItems: "center",
   },
   indicatorBox: {
     backgroundColor: "white",
@@ -212,8 +255,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
     elevation: 2,
-    height:"65%",
-    justifyContent: "center"
+    height: "65%",
+    justifyContent: "center",
   },
   indicatorLabel: {
     color: "#718096",

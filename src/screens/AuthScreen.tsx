@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import LoginButton from "../components/LoginButton";
 
-export default function LoginScreen({navigation} : any) {
+export default function AuthScreen({navigation} : any) {
   const [userRole, setUserRole] = useState<"tutor" | "vet" | null>(null);
 
   return (
