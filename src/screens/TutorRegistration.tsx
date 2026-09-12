@@ -13,9 +13,14 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
-import { red } from "react-native-reanimated/lib/typescript/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRegister } from "../hooks/useAuth";
+import { RegisterRequest } from "../services/authService";
+
 
 export default function TutorRegistration({ navigation }: any) {
+  const registerMutation = useRegister();
+
   const [formData, setFormData] = useState({
     name: "",
     cpf: "",
@@ -31,55 +36,82 @@ export default function TutorRegistration({ navigation }: any) {
   const [errors, setErrors] = useState<Record<string, string>> ({});
 
   function validateForm() {
-    let newErrors: Record<string, string> = {};
+  let newErrors: Record<string, string> = {};
 
-    // validação para nome
-    if (!formData.name.trim()){
-      newErrors.name = "O nome é obrigatório!";
-    }
-
-    // validação para cpf
-    if (formData.cpf.trim().length < 11) {
-      newErrors.cpf = "CPF inválido!";
-    }
-
-    // validação de telefone
-    if (!formData.phone.trim()) {
-      newErrors.phone = "O Telefone é obrigatório!"
-    }
-
-    // validação para endereço
-    if (!formData.address.trim()){
-      newErrors.address = "O endereço é obrigatório!"
-    }
-
-    // validação para email
-    if (!formData.email.trim()){
-      newErrors.email = "O email é obrigatório!"
-    }
-
-    // validação de senha
-    if (formData.senha.length < 6) {
-      newErrors.senha = "A senha deve ter no mínimo 6 caracteres.";
-    }
-
-    // Validação de Confirmação de Senha
-    if (formData.senha !== formData.password) {
-      newErrors.password = "As senhas não coincidem.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-
+  // validação para nome
+  if (!formData.name.trim()) {
+    newErrors.name = "O nome é obrigatório!";
   }
 
-  function handleRegister() {
-    const isValid = validateForm();
-    
-    if (isValid) {
-      navigation.navigate("LoginScreen");
-    }
+  // validação para CPF
+  if (formData.cpf.trim().length < 11) {
+    newErrors.cpf = "CPF inválido!";
   }
+
+  // validação de telefone
+  if (!formData.phone.trim()) {
+    newErrors.phone = "O Telefone é obrigatório!";
+  }
+
+  // validação para endereço
+  if (!formData.address.trim()) {
+    newErrors.address = "O endereço é obrigatório!";
+  }
+
+  // validação para email
+  if (!formData.email.trim()) {
+    newErrors.email = "O email é obrigatório!";
+  }
+
+  // validação de senha
+  if (formData.senha.length < 6) {
+    newErrors.senha = "A senha deve ter no mínimo 6 caracteres.";
+  }
+
+  // validação de confirmação de senha
+  if (formData.senha !== formData.password) {
+    newErrors.password = "As senhas não coincidem.";
+  }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+}
+
+async function handleRegister() {
+  const isValid = validateForm();
+
+  if (!isValid) {
+    return;
+  }
+
+  try {
+    const role = await AsyncStorage.getItem("selectedRole");
+
+    if (role !== "ROLE_USER") {
+      console.log("Role de tutor não encontrada.");
+      return;
+    }
+
+    const data: RegisterRequest = {
+      email: formData.email,
+      password: formData.senha,
+      role: "ROLE_USER",
+      owner: {
+        name: formData.name,
+        cpf: formData.cpf,
+        phone: formData.phone,
+        address: formData.address,
+      },
+    };
+
+    await registerMutation.mutateAsync(data);
+
+    navigation.navigate("LoginScreen");
+  } catch (error) {
+    console.error("Erro ao cadastrar tutor:", error);
+  }
+}
 
   function clearForm() {
     setFormData({

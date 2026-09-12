@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons"; 
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import LoginButton from "../components/LoginButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function AuthScreen({navigation} : any) {
+export default function AuthScreen({ navigation }: any) {
   const [userRole, setUserRole] = useState<"tutor" | "vet" | null>(null);
 
   return (
@@ -23,21 +24,27 @@ export default function AuthScreen({navigation} : any) {
             text="Sou Tutor"
             icon="paw"
             selected={userRole === "tutor"}
-            onPress={() => {
-              setUserRole("tutor"); 
-              navigation.navigate('TutorForm')}}
+            onPress={async () => {
+              setUserRole("tutor");
+
+              await AsyncStorage.setItem("selectedRole", "ROLE_USER");
+
+              navigation.navigate("TutorForm");
+            }}
           />
-          
+
           <LoginButton
             text="Sou Veterinário"
             icon="medical"
             selected={userRole === "vet"}
-            onPress={() => {setUserRole("vet");
-            navigation.navigate('VetRegistration')}
-            
-            }
+            onPress={async () => {
+              setUserRole("vet");
+
+              await AsyncStorage.setItem("selectedRole", "ROLE_VET");
+
+              navigation.navigate("VetRegistration");
+            }}
           />
-   
         </View>
 
         {/* Opções de Login Social */}
@@ -85,10 +92,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
 
-  
   roleText: { marginTop: 10, fontWeight: "600", color: "#4B5563" },
   selectedText: { color: "#FFF" },
-  authActions: { width: "100%", height: "50%", justifyContent: "center", },
+  authActions: { width: "100%", height: "50%", justifyContent: "center" },
   socialButton: {
     flexDirection: "row",
     alignItems: "center",

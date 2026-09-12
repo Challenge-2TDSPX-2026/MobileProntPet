@@ -28,18 +28,19 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator>
-           <Stack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-          
+
           <Stack.Screen
             name="AuthScreen"
             component={AuthScreen}
             options={{ headerShown: false }}
           />
 
+           <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          
           <Stack.Screen
             name="TutorForm"
             component={TutorForm}

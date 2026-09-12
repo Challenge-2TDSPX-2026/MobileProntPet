@@ -13,29 +13,75 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRegister } from "../hooks/useAuth";
 
 export default function VetRegistration({ navigation }: any) {
+  const registerMutation = useRegister();
+
   const [formData, setFormData] = useState({
     name: "",
-    crmv: "",
+    cnpj: "",
     phone: "",
     email: "",
     senha: "",
     password: "",
     address: "",
+    openingHours: "",
+    closingHours: "",
   });
+
+  async function handleRegister() {
+    try {
+      const role = await AsyncStorage.getItem("selectedRole");
+
+      if (role !== "ROLE_VET") {
+        console.log("Role de veterinário não encontrada.");
+        return;
+      }
+
+      if (formData.senha !== formData.password) {
+        console.log("As senhas não coincidem.");
+        return;
+      }
+
+      const data = {
+        email: formData.email,
+        password: formData.senha,
+        role: "ROLE_VET" as const,
+        clinic: {
+          name: formData.name,
+          cnpj: formData.cnpj,
+          address: formData.address,
+          phone: formData.phone,
+          openingHours: formData.openingHours,
+          closingHours: formData.closingHours,
+        },
+      };
+
+      console.log("Dados enviados:", data);
+
+      await registerMutation.mutateAsync(data);
+
+      navigation.navigate("LoginVet");
+    } catch (error) {
+      console.error("Erro ao cadastrar veterinário:", error);
+    }
+  }
 
   const [focusedInput, setFocusedInput] = useState("");
 
   function clearForm() {
     setFormData({
       name: "",
-      crmv: "",
+      cnpj: "",
       phone: "",
       email: "",
       senha: "",
       password: "",
       address: "",
+      openingHours: "",
+      closingHours: "",
     });
   }
 
@@ -59,7 +105,7 @@ export default function VetRegistration({ navigation }: any) {
             <View style={styles.form}>
               <View style={styles.viewLabel}>
                 <View>
-                  <Text style={styles.labelName}>Nome Completo:</Text>
+                  <Text style={styles.labelName}>Nome da clinica:</Text>
                 </View>
                 <View style={styles.alreadyLogin}>
                   <TouchableOpacity
@@ -83,25 +129,27 @@ export default function VetRegistration({ navigation }: any) {
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
-                  <Text style={styles.label}>CRMV:</Text>
+                  <Text style={styles.label}>CNPJ:</Text>
+
                   <TextInput
                     style={[
                       styles.input,
-                      focusedInput === "CRMV" && styles.inputFocused,
+                      focusedInput === "CNPJ" && styles.inputFocused,
                     ]}
-                    value={formData.crmv}
-                    onFocus={() => setFocusedInput("CRMV")}
-                    onBlur={() => setFocusedInput(" ")}
-                    placeholder="000000"
+                    value={formData.cnpj}
+                    onFocus={() => setFocusedInput("CNPJ")}
+                    onBlur={() => setFocusedInput("")}
+                    placeholder="00.000.000/0000-00"
                     keyboardType="numeric"
                     onChangeText={(txt) =>
-                      setFormData({ ...formData, crmv: txt })
+                      setFormData({ ...formData, cnpj: txt })
                     }
                   />
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Telefone:</Text>
+
                   <TextInput
                     style={[
                       styles.input,
@@ -109,11 +157,46 @@ export default function VetRegistration({ navigation }: any) {
                     ]}
                     value={formData.phone}
                     onFocus={() => setFocusedInput("Telefone")}
-                    onBlur={() => setFocusedInput(" ")}
+                    onBlur={() => setFocusedInput("")}
                     placeholder="(11) 99999-9999"
                     keyboardType="phone-pad"
                     onChangeText={(txt) =>
                       setFormData({ ...formData, phone: txt })
+                    }
+                  />
+                  <Text style={styles.label}>Abertura:</Text>
+
+                  <TextInput
+                    style={[
+                      styles.input,
+                      focusedInput === "Abertura" && styles.inputFocused,
+                    ]}
+                    value={formData.openingHours}
+                    onFocus={() => setFocusedInput("Abertura")}
+                    onBlur={() => setFocusedInput("")}
+                    placeholder="08:00"
+                    keyboardType="numeric"
+                    onChangeText={(txt) =>
+                      setFormData({ ...formData, openingHours: txt })
+                    }
+                  />
+                </View>
+
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.label}>Fechamento:</Text>
+
+                  <TextInput
+                    style={[
+                      styles.input,
+                      focusedInput === "Fechamento" && styles.inputFocused,
+                    ]}
+                    value={formData.closingHours}
+                    onFocus={() => setFocusedInput("Fechamento")}
+                    onBlur={() => setFocusedInput("")}
+                    placeholder="18:00"
+                    keyboardType="numeric"
+                    onChangeText={(txt) =>
+                      setFormData({ ...formData, closingHours: txt })
                     }
                   />
                 </View>
@@ -182,10 +265,7 @@ export default function VetRegistration({ navigation }: any) {
 
               <View style={styles.tutorFormButton}>
                 <MainButton title="Limpar" onPress={() => clearForm()} />
-                <MainButton
-                  title="Criar Conta"
-                  onPress={() => navigation.navigate("LoginVet")}
-                />
+                <MainButton title="Criar Conta" onPress={handleRegister} />
               </View>
             </View>
           </ScrollView>
