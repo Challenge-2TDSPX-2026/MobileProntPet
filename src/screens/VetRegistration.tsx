@@ -107,7 +107,7 @@ export default function VetRegistration({ navigation }: any) {
                 <View>
                   <Text style={styles.labelName}>Nome da clinica:</Text>
                 </View>
-                <View style={styles.alreadyLogin}>
+                <View>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("LoginVet")}
                   >
@@ -127,13 +127,15 @@ export default function VetRegistration({ navigation }: any) {
                 onChangeText={(txt) => setFormData({ ...formData, name: txt })}
               />
 
+              {/* CNPJ + Telefone */}
               <View style={styles.row}>
-                <View style={{ flex: 1, marginRight: 10 }}>
+                <View style={styles.columnLeft}>
                   <Text style={styles.label}>CNPJ:</Text>
 
                   <TextInput
                     style={[
                       styles.input,
+                      styles.inputSmall,
                       focusedInput === "CNPJ" && styles.inputFocused,
                     ]}
                     value={formData.cnpj}
@@ -147,12 +149,13 @@ export default function VetRegistration({ navigation }: any) {
                   />
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={styles.column}>
                   <Text style={styles.label}>Telefone:</Text>
 
                   <TextInput
                     style={[
                       styles.input,
+                      styles.inputSmall,
                       focusedInput === "Telefone" && styles.inputFocused,
                     ]}
                     value={formData.phone}
@@ -164,11 +167,18 @@ export default function VetRegistration({ navigation }: any) {
                       setFormData({ ...formData, phone: txt })
                     }
                   />
+                </View>
+              </View>
+
+              {/* Horário */}
+              <View style={styles.row}>
+                <View style={styles.columnLeft}>
                   <Text style={styles.label}>Abertura:</Text>
 
                   <TextInput
                     style={[
                       styles.input,
+                      styles.inputSmall,
                       focusedInput === "Abertura" && styles.inputFocused,
                     ]}
                     value={formData.openingHours}
@@ -182,12 +192,13 @@ export default function VetRegistration({ navigation }: any) {
                   />
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={styles.column}>
                   <Text style={styles.label}>Fechamento:</Text>
 
                   <TextInput
                     style={[
                       styles.input,
+                      styles.inputSmall,
                       focusedInput === "Fechamento" && styles.inputFocused,
                     ]}
                     value={formData.closingHours}
@@ -276,52 +287,87 @@ export default function VetRegistration({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF" },
-  scrollContent: { padding: 24 },
-  header: { marginBottom: 32, marginTop: 20 },
-  stepText: {
-    color: "#eb9a22",
-    fontWeight: "bold",
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+  },
+
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
+
+  form: {
+    gap: 16,
+  },
+
+  label: {
     fontSize: 14,
-    marginBottom: 8,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 6,
   },
 
-  form: { gap: 15 },
-  label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 4 },
-
-  tutorFormButton: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   labelName: {
     fontSize: 14,
     fontWeight: "600",
     color: "#374151",
-    marginBottom: 4,
-    width: 150,
+    marginBottom: 6,
   },
+
+  viewLabel: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
   alreadyLogin: {
     color: "#eb9a22",
-    fontWeight: "bold",
-    fontSize: 14,
-    marginBottom: 8,
+    fontWeight: "600",
+    fontSize: 13,
     textDecorationLine: "underline",
   },
+
   input: {
-    backgroundColor: "#F3F4F6",
+    backgroundColor: "#F8F9FA",
     borderRadius: 10,
-    padding: 15,
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    fontSize: 15,
     borderWidth: 1,
     borderColor: "#E5E7EB",
+    color: "#111827",
   },
-  row: { flexDirection: "row" },
+
+  inputSmall: {
+    minHeight: 48,
+  },
 
   inputFocused: {
     borderColor: "#eb9a22",
+    backgroundColor: "#FFF",
   },
-  viewLabel: {
+
+  row: {
     flexDirection: "row",
-    gap: 100,
+    width: "100%",
+  },
+
+  columnLeft: {
+    flex: 1,
+    marginRight: 8,
+  },
+
+  column: {
+    flex: 1,
+    marginLeft: 8,
+  },
+
+  tutorFormButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+    marginTop: 8,
   },
 });

@@ -1,17 +1,50 @@
 import React, { useState } from "react";
-import {View,Text,TextInput,StyleSheet,ScrollView,KeyboardAvoidingView,Platform} from "react-native";
 
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+} from "react-native-safe-area-context";
+
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
+import { useLogin } from "../hooks/useAuth";
 
-export default function TutorRegistration({ navigation }: any) {
+export default function LoginVet({ navigation }: any) {
+  const loginMutation = useLogin();
+
   const [formData, setFormData] = useState({
-    crmv: "",
+    email: "",
     senha: "",
   });
 
   const [focusedInput, setFocusedInput] = useState("");
+
+  async function handleLogin() {
+    try {
+      const data = {
+        email: formData.email,
+        password: formData.senha,
+      };
+
+      console.log("Dados de login:", data);
+
+      await loginMutation.mutateAsync(data);
+
+      navigation.navigate("VetDashboardScreen");
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+    }
+  }
 
   return (
     <SafeAreaProvider>
@@ -31,37 +64,45 @@ export default function TutorRegistration({ navigation }: any) {
             />
 
             <View style={styles.form}>
-              
-              <Text style={styles.label}>CRMV:</Text>
+              <Text style={styles.label}>E-mail:</Text>
+
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === "CRMV" && styles.inputFocused,
+                  focusedInput === "Email" && styles.inputFocused,
                 ]}
-                onFocus={() => setFocusedInput("CRMV")}
-                onBlur={() => setFocusedInput(" ")}
-                placeholder="Digite seu CRMV"
+                value={formData.email}
+                onFocus={() => setFocusedInput("Email")}
+                onBlur={() => setFocusedInput("")}
+                placeholder="Digite seu e-mail"
                 autoCapitalize="none"
-                keyboardType="numeric"
-                onChangeText={(txt) => setFormData({ ...formData, crmv: txt })}
+                keyboardType="email-address"
+                onChangeText={(txt) =>
+                  setFormData({ ...formData, email: txt })
+                }
               />
+
               <Text style={styles.label}>Senha:</Text>
+
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
                 ]}
+                value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
-                onBlur={() => setFocusedInput(" ")}
-                placeholder="Digite sua senha "
+                onBlur={() => setFocusedInput("")}
+                placeholder="Digite sua senha"
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) => setFormData({ ...formData, senha: txt })}
+                onChangeText={(txt) =>
+                  setFormData({ ...formData, senha: txt })
+                }
               />
-              
+
               <MainButton
-                title="Login "
-                onPress={() => navigation.navigate("VetDashboardScreen")}
+                title={loginMutation.isPending ? "Entrando..." : "Login"}
+                onPress={handleLogin}
               />
             </View>
           </ScrollView>
@@ -72,9 +113,20 @@ export default function TutorRegistration({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF" },
-  scrollContent: { padding: 24 },
-  header: { marginBottom: 32, marginTop: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+  },
+
+  scrollContent: {
+    padding: 24,
+  },
+
+  header: {
+    marginBottom: 32,
+    marginTop: 20,
+  },
+
   stepText: {
     color: "#eb9a22",
     fontWeight: "bold",
@@ -82,8 +134,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
-  form: { gap: 15 },
-  label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 4 },
+  form: {
+    gap: 15,
+  },
+
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: 4,
+  },
+
   input: {
     backgroundColor: "#F3F4F6",
     borderRadius: 10,
@@ -92,7 +153,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
-  row: { flexDirection: "row" },
+
+  row: {
+    flexDirection: "row",
+  },
 
   inputFocused: {
     borderColor: "#eb9a22",

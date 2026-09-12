@@ -48,6 +48,15 @@ export async function getPets(
   );
 }
 
+export async function getMyPets(
+  page = 0,
+  size = 10
+): Promise<PetPageResponse> {
+  return apiFetch<PetPageResponse>(
+    `/pets/me?page=${page}&size=${size}`
+  );
+}
+
 export async function getPetById(
   id: number
 ): Promise<PetResponse> {

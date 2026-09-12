@@ -11,6 +11,7 @@ import {
   getPets,
   updatePet,
   PetRequest,
+  getMyPets
 } from "../services/petService";
 
 export function usePets(page = 0, size = 10) {
@@ -25,6 +26,14 @@ export function usePet(id: number) {
     queryKey: ["pet", id],
     queryFn: () => getPetById(id),
     enabled: !!id,
+  });
+}
+
+
+export function useMyPets(page = 0, size = 10) {
+  return useQuery({
+    queryKey: ["myPets", page, size],
+    queryFn: () => getMyPets(page, size),
   });
 }
 

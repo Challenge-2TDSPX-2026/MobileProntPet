@@ -100,8 +100,9 @@ async function handleRegister() {
       owner: {
         name: formData.name,
         cpf: formData.cpf,
+        email:formData.email,
         phone: formData.phone,
-        address: formData.address,
+
       },
     };
 

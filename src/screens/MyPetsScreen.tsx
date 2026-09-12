@@ -11,15 +11,18 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import { usePets, useDeletePet } from "../hooks/usePets";
+import { useDeletePet, useMyPets } from "../hooks/usePets";
+import { logout } from "../services/authService";
 
 export default function MyPetsScreen({ navigation }: any) {
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-  } = usePets();
+  async function handleLogout() {
+    await logout();
+    navigation.replace("AuthScreen");
+  }
+
+  const { data, isLoading, isError, refetch } = useMyPets();
+
+  console.log("MEUS PETS:", data);
 
   const deletePetMutation = useDeletePet();
 
@@ -33,9 +36,7 @@ export default function MyPetsScreen({ navigation }: any) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>
-            Carregando seus pets...
-          </Text>
+          <Text style={styles.loadingText}>Carregando seus pets...</Text>
         </View>
       </SafeAreaView>
     );
@@ -53,9 +54,7 @@ export default function MyPetsScreen({ navigation }: any) {
             style={styles.retryButton}
             onPress={() => refetch()}
           >
-            <Text style={styles.retryButtonText}>
-              Tentar novamente
-            </Text>
+            <Text style={styles.retryButtonText}>Tentar novamente</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -65,13 +64,21 @@ export default function MyPetsScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>
-          Meus Pets
-        </Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.headerTitle}>Meus Pets</Text>
 
-        <Text style={styles.headerSubtitle}>
-          Gerencie os pets cadastrados
-        </Text>
+            <Text style={styles.headerSubtitle}>
+              Gerencie os pets cadastrados
+            </Text>
+          </View>
+
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={22} color="#1F2937" />
+
+            <Text style={styles.logoutText}>Sair</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlatList
@@ -81,19 +88,11 @@ export default function MyPetsScreen({ navigation }: any) {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons
-              name="paw-outline"
-              size={70}
-              color="#D1D5DB"
-            />
+            <Ionicons name="paw-outline" size={70} color="#D1D5DB" />
 
-            <Text style={styles.emptyTitle}>
-              Nenhum pet cadastrado
-            </Text>
+            <Text style={styles.emptyTitle}>Nenhum pet cadastrado</Text>
 
-            <Text style={styles.emptySubtitle}>
-              Adicione seu primeiro pet
-            </Text>
+            <Text style={styles.emptySubtitle}>Adicione seu primeiro pet</Text>
           </View>
         }
         renderItem={({ item }) => (
@@ -106,40 +105,24 @@ export default function MyPetsScreen({ navigation }: any) {
             }
           >
             <View style={styles.petImage}>
-              <Ionicons
-                name="paw"
-                size={35}
-                color="#eb9a22"
-              />
+              <Ionicons name="paw" size={35} color="#eb9a22" />
             </View>
 
             <View style={styles.petInfo}>
-              <Text style={styles.petName}>
-                {item.name}
-              </Text>
+              <Text style={styles.petName}>{item.name}</Text>
 
-              <Text style={styles.petDetails}>
-                {item.breed}
-              </Text>
+              <Text style={styles.petDetails}>{item.breed}</Text>
 
-              <Text style={styles.petDetails}>
-                {item.species}
-              </Text>
+              <Text style={styles.petDetails}>{item.species}</Text>
 
-              <Text style={styles.petDetails}>
-                {item.weight} kg
-              </Text>
+              <Text style={styles.petDetails}>{item.weight} kg</Text>
             </View>
 
             <TouchableOpacity
               onPress={() => handleRemovePet(item.id)}
               disabled={deletePetMutation.isPending}
             >
-              <Ionicons
-                name="trash-outline"
-                size={24}
-                color="#d62828"
-              />
+              <Ionicons name="trash-outline" size={24} color="#d62828" />
             </TouchableOpacity>
           </TouchableOpacity>
         )}
@@ -147,19 +130,11 @@ export default function MyPetsScreen({ navigation }: any) {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() =>
-          navigation.navigate("PetFormScreen")
-        }
+        onPress={() => navigation.navigate("PetFormScreen")}
       >
-        <Ionicons
-          name="add"
-          size={26}
-          color="white"
-        />
+        <Ionicons name="add" size={26} color="white" />
 
-        <Text style={styles.addButtonText}>
-          Novo Pet
-        </Text>
+        <Text style={styles.addButtonText}>Novo Pet</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -322,5 +297,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 8,
   },
-});
+  headerTop: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+},
 
+logoutButton: {
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "rgba(255,255,255,0.7)",
+  paddingHorizontal: 12,
+  paddingVertical: 8,
+  borderRadius: 20,
+},
+
+logoutText: {
+  marginLeft: 5,
+  fontSize: 14,
+  fontWeight: "bold",
+  color: "#1F2937",
+},
+});

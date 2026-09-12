@@ -33,9 +33,9 @@ export async function login(
 
 export interface OwnerRequest {
   name: string;
+  email:string;
   cpf: string;
   phone: string;
-  address: string;
 }
 
 export interface ClinicRequest {
