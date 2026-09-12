@@ -12,14 +12,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useDeletePet, useMyPets } from "../hooks/usePets";
+
+import { useQueryClient } from "@tanstack/react-query";
 import { logout } from "../services/authService";
 
 export default function MyPetsScreen({ navigation }: any) {
+  const queryClient = useQueryClient();
+
   async function handleLogout() {
     await logout();
-    navigation.replace("AuthScreen");
-  }
+    queryClient.clear();
 
+    navigation.replace("TutorForm");
+  }
   const { data, isLoading, isError, refetch } = useMyPets();
 
   console.log("MEUS PETS:", data);
@@ -298,24 +303,24 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   headerTop: {
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-},
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 
-logoutButton: {
-  flexDirection: "row",
-  alignItems: "center",
-  backgroundColor: "rgba(255,255,255,0.7)",
-  paddingHorizontal: 12,
-  paddingVertical: 8,
-  borderRadius: 20,
-},
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.7)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
 
-logoutText: {
-  marginLeft: 5,
-  fontSize: 14,
-  fontWeight: "bold",
-  color: "#1F2937",
-},
+  logoutText: {
+    marginLeft: 5,
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#1F2937",
+  },
 });

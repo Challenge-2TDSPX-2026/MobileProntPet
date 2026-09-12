@@ -43,8 +43,12 @@ export function useCreatePet() {
   return useMutation({
     mutationFn: (data: PetRequest) => createPet(data),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
+        queryKey: ["myPets"],
+      });
+
+      await queryClient.invalidateQueries({
         queryKey: ["pets"],
       });
     },

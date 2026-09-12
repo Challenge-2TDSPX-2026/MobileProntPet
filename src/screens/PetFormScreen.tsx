@@ -177,8 +177,8 @@ export default function PetFormScreen({ navigation }: any) {
             selectedValue={form.sex}
             onValueChange={(itemValue) => setForm({ ...form, sex: itemValue })}
           >
-            <Picker.Item label="Male" value="Male" />
-            <Picker.Item label="Fêmea" value="Fêmea" />
+            <Picker.Item label="Macho" value="Male" />
+            <Picker.Item label="Fêmea" value="Female" />
             <Picker.Item label="Outro" value="Other" />
           </Picker>
 
