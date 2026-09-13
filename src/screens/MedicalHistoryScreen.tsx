@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import {
   Text,
@@ -9,11 +9,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import {
-  SafeAreaView,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
+import { useFocusEffect } from "@react-navigation/native";
 import AppointmentRow from "../components/AppointmentRow";
 
 import {
@@ -21,18 +19,11 @@ import {
   deleteAppointment,
 } from "../services/appointmentService";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import BackButton from "../components/BackButton";
 
-export default function MedicalHistoryScreen({
-  navigation,
-  route,
-}: any) {
+export default function MedicalHistoryScreen({ navigation, route }: any) {
   const { petId } = route.params;
 
   const queryClient = useQueryClient();
@@ -47,9 +38,16 @@ export default function MedicalHistoryScreen({
     enabled: !!petId,
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["appointments", petId],
+      });
+    }, [queryClient, petId]),
+  );
+
   const deleteAppointmentMutation = useMutation({
-    mutationFn: (appointmentId: number) =>
-      deleteAppointment(appointmentId),
+    mutationFn: (appointmentId: number) => deleteAppointment(appointmentId),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -58,7 +56,7 @@ export default function MedicalHistoryScreen({
 
       Alert.alert(
         "Consulta cancelada",
-        "A consulta foi cancelada com sucesso."
+        "A consulta foi cancelada com sucesso.",
       );
     },
 
@@ -66,22 +64,19 @@ export default function MedicalHistoryScreen({
       if (error?.status === 409) {
         Alert.alert(
           "Não é possível cancelar",
-          "Essa consulta já aconteceu e não pode ser cancelada."
+          "Essa consulta já aconteceu e não pode ser cancelada.",
         );
         return;
       }
 
       if (error?.status === 403) {
-        Alert.alert(
-          "Acesso negado",
-          "Você não pode cancelar essa consulta."
-        );
+        Alert.alert("Acesso negado", "Você não pode cancelar essa consulta.");
         return;
       }
 
       Alert.alert(
         "Erro",
-        error?.message || "Não foi possível cancelar a consulta."
+        error?.message || "Não foi possível cancelar a consulta.",
       );
     },
   });
@@ -102,20 +97,18 @@ export default function MedicalHistoryScreen({
             deleteAppointmentMutation.mutate(appointmentId);
           },
         },
-      ]
+      ],
     );
   };
 
   const now = new Date();
 
   const upcomingAppointments = appointments.filter(
-    (appointment) =>
-      new Date(appointment.appointmentDate) >= now
+    (appointment) => new Date(appointment.appointmentDate) >= now,
   );
 
   const historyAppointments = appointments.filter(
-    (appointment) =>
-      new Date(appointment.appointmentDate) < now
+    (appointment) => new Date(appointment.appointmentDate) < now,
   );
 
   const sections = [
@@ -135,9 +128,7 @@ export default function MedicalHistoryScreen({
         <SafeAreaView style={styles.container}>
           <ActivityIndicator size="large" />
 
-          <Text style={styles.loadingText}>
-            Carregando consultas...
-          </Text>
+          <Text style={styles.loadingText}>Carregando consultas...</Text>
         </SafeAreaView>
       </SafeAreaProvider>
     );
@@ -147,9 +138,7 @@ export default function MedicalHistoryScreen({
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
-          <Text style={styles.errorText}>
-            Erro ao carregar as consultas.
-          </Text>
+          <Text style={styles.errorText}>Erro ao carregar as consultas.</Text>
         </SafeAreaView>
       </SafeAreaProvider>
     );
@@ -158,44 +147,31 @@ export default function MedicalHistoryScreen({
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <BackButton
-          goBackTo="TutorHomeScreen"
-          params={{ petId: petId }}
-        />
+        <BackButton goBackTo="TutorHomeScreen" params={{ petId: petId }} />
 
         <SectionList
           sections={sections}
           keyExtractor={(item) => item.id.toString()}
-
           renderSectionHeader={({ section }) => (
-            <Text style={styles.sectionTitle}>
-              {section.title}
-            </Text>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
           )}
-
           renderItem={({ item, section }) => (
             <>
               <AppointmentRow
                 appointment={item}
                 onPress={() =>
-                  navigation.navigate(
-                    "AppointmentDetailsScreen",
-                    {
-                      appointment: item,
-                    }
-                  )
+                  navigation.navigate("AppointmentDetailsScreen", {
+                    appointment: item,
+                    petId
+                  })
                 }
               />
 
               {section.title === "Próximas Consultas" && (
                 <TouchableOpacity
                   style={styles.cancelButton}
-                  disabled={
-                    deleteAppointmentMutation.isPending
-                  }
-                  onPress={() =>
-                    handleDeleteAppointment(item.id)
-                  }
+                  disabled={deleteAppointmentMutation.isPending}
+                  onPress={() => handleDeleteAppointment(item.id)}
                 >
                   <Text style={styles.cancelButtonText}>
                     {deleteAppointmentMutation.isPending
@@ -206,11 +182,8 @@ export default function MedicalHistoryScreen({
               )}
             </>
           )}
-
           ListEmptyComponent={
-            <Text style={styles.emptyText}>
-              Nenhuma consulta encontrada.
-            </Text>
+            <Text style={styles.emptyText}>Nenhuma consulta encontrada.</Text>
           }
         />
       </SafeAreaView>
@@ -265,4 +238,3 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
