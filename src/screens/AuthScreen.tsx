@@ -13,7 +13,7 @@ export default function AuthScreen({ navigation }: any) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Bem-vindo ao Pet Pront</Text>
+          <Text style={styles.title}>Bem-vindo ao Pront Pet</Text>
           <Text style={styles.subtitle}>
             Escolha como deseja acessar a plataforma
           </Text>
