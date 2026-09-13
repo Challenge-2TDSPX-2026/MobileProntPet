@@ -10,23 +10,19 @@ import {
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BackButton from "../components/BackButton";
 
 import { useMyPets } from "../hooks/usePets";
-import {
-  useClinics,
-  useCreateAppointment,
-} from "../hooks/useAppointments";
+import { useClinics, useCreateAppointment } from "../hooks/useAppointments";
 
-export default function AppointmentFormScreen({
-  navigation,
-}: any) {
+export default function AppointmentFormScreen({ navigation, route }: any) {
+  
+  const { petId } = route.params ?? {};
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
-  const [selectedClinicId, setSelectedClinicId] = useState<number | null>(
-    null
-  );
+  const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null);
 
   const [appointmentDate, setAppointmentDate] = useState<Date>(
-    new Date(Date.now() + 60 * 60 * 1000)
+    new Date(Date.now() + 60 * 60 * 1000),
   );
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -45,9 +41,7 @@ export default function AppointmentFormScreen({
   const pets = petsData?.content ?? [];
 
   const selectedClinic = useMemo(() => {
-    return clinics?.find(
-      (clinic) => clinic.id === selectedClinicId
-    );
+    return clinics?.find((clinic) => clinic.id === selectedClinicId);
   }, [clinics, selectedClinicId]);
 
   function formatDate(date: Date) {
@@ -61,44 +55,28 @@ export default function AppointmentFormScreen({
     });
   }
 
-  function handleDateChange(
-    event: any,
-    date?: Date
-  ) {
+  function handleDateChange(event: any, date?: Date) {
     setShowDatePicker(false);
 
     if (date) {
       setAppointmentDate((current) => {
         const updated = new Date(date);
 
-        updated.setHours(
-          current.getHours(),
-          current.getMinutes(),
-          0,
-          0
-        );
+        updated.setHours(current.getHours(), current.getMinutes(), 0, 0);
 
         return updated;
       });
     }
   }
 
-  function handleTimeChange(
-    event: any,
-    date?: Date
-  ) {
+  function handleTimeChange(event: any, date?: Date) {
     setShowTimePicker(false);
 
     if (date) {
       setAppointmentDate((current) => {
         const updated = new Date(current);
 
-        updated.setHours(
-          date.getHours(),
-          date.getMinutes(),
-          0,
-          0
-        );
+        updated.setHours(date.getHours(), date.getMinutes(), 0, 0);
 
         return updated;
       });
@@ -107,32 +85,21 @@ export default function AppointmentFormScreen({
 
   function handleSchedule() {
     if (!selectedPetId) {
-      Alert.alert(
-        "Atenção",
-        "Selecione um pet."
-      );
+      Alert.alert("Atenção", "Selecione um pet.");
       return;
     }
 
     if (!selectedClinicId) {
-      Alert.alert(
-        "Atenção",
-        "Selecione uma clínica."
-      );
+      Alert.alert("Atenção", "Selecione uma clínica.");
       return;
     }
 
     if (appointmentDate.getTime() < Date.now()) {
-      Alert.alert(
-        "Data inválida",
-        "Escolha uma data e horário futuros."
-      );
+      Alert.alert("Data inválida", "Escolha uma data e horário futuros.");
       return;
     }
 
-    const appointmentDateISO = formatAppointmentDate(
-      appointmentDate
-    );
+    const appointmentDateISO = formatAppointmentDate(appointmentDate);
 
     createAppointmentMutation.mutate(
       {
@@ -150,22 +117,16 @@ export default function AppointmentFormScreen({
                 text: "OK",
                 onPress: () => navigation.goBack(),
               },
-            ]
+            ],
           );
         },
 
         onError: (error: any) => {
-          console.log(
-            "ERRO AO AGENDAR:",
-            error
-          );
+          console.log("ERRO AO AGENDAR:", error);
 
-          Alert.alert(
-            "Não foi possível agendar",
-            getErrorMessage(error)
-          );
+          Alert.alert("Não foi possível agendar", getErrorMessage(error));
         },
-      }
+      },
     );
   }
 
@@ -173,9 +134,7 @@ export default function AppointmentFormScreen({
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.center}>
-          <Text style={styles.loadingText}>
-            Carregando informações...
-          </Text>
+          <Text style={styles.loadingText}>Carregando informações...</Text>
         </View>
       </SafeAreaView>
     );
@@ -199,40 +158,30 @@ export default function AppointmentFormScreen({
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>
-          Marcar consulta
-        </Text>
+        <BackButton goBackTo="TutorHomeScreen" params={{ petId: petId }} />
+        <Text style={styles.title}>Marcar consulta</Text>
 
         <Text style={styles.subtitle}>
           Escolha o pet, a clínica e o horário.
         </Text>
 
         {/* PET */}
-        <Text style={styles.label}>
-          Pet
-        </Text>
+        <Text style={styles.label}>Pet</Text>
 
         <View style={styles.optionsContainer}>
           {pets.map((pet) => {
-            const selected =
-              selectedPetId === pet.id;
+            const selected = selectedPetId === pet.id;
 
             return (
               <TouchableOpacity
                 key={pet.id}
-                style={[
-                  styles.option,
-                  selected && styles.optionSelected,
-                ]}
-                onPress={() =>
-                  setSelectedPetId(pet.id)
-                }
+                style={[styles.option, selected && styles.optionSelected]}
+                onPress={() => setSelectedPetId(pet.id)}
               >
                 <Text
                   style={[
                     styles.optionTitle,
-                    selected &&
-                      styles.optionTitleSelected,
+                    selected && styles.optionTitleSelected,
                   ]}
                 >
                   {pet.name}
@@ -253,43 +202,31 @@ export default function AppointmentFormScreen({
         )}
 
         {/* CLÍNICA */}
-        <Text style={styles.label}>
-          Clínica
-        </Text>
+        <Text style={styles.label}>Clínica</Text>
 
         <View style={styles.optionsContainer}>
           {(clinics ?? []).map((clinic) => {
-            const selected =
-              selectedClinicId === clinic.id;
+            const selected = selectedClinicId === clinic.id;
 
             return (
               <TouchableOpacity
                 key={clinic.id}
-                style={[
-                  styles.option,
-                  selected && styles.optionSelected,
-                ]}
-                onPress={() =>
-                  setSelectedClinicId(clinic.id)
-                }
+                style={[styles.option, selected && styles.optionSelected]}
+                onPress={() => setSelectedClinicId(clinic.id)}
               >
                 <Text
                   style={[
                     styles.optionTitle,
-                    selected &&
-                      styles.optionTitleSelected,
+                    selected && styles.optionTitleSelected,
                   ]}
                 >
                   {clinic.name}
                 </Text>
 
-                <Text style={styles.optionSubtitle}>
-                  {clinic.address}
-                </Text>
+                <Text style={styles.optionSubtitle}>{clinic.address}</Text>
 
                 <Text style={styles.optionSubtitle}>
-                  {clinic.openingHours} às{" "}
-                  {clinic.closingHours}
+                  {clinic.openingHours} às {clinic.closingHours}
                 </Text>
               </TouchableOpacity>
             );
@@ -297,15 +234,11 @@ export default function AppointmentFormScreen({
         </View>
 
         {/* DATA */}
-        <Text style={styles.label}>
-          Data
-        </Text>
+        <Text style={styles.label}>Data</Text>
 
         <TouchableOpacity
           style={styles.dateButton}
-          onPress={() =>
-            setShowDatePicker(true)
-          }
+          onPress={() => setShowDatePicker(true)}
         >
           <Text style={styles.dateButtonText}>
             {formatDate(appointmentDate)}
@@ -322,15 +255,11 @@ export default function AppointmentFormScreen({
         )}
 
         {/* HORÁRIO */}
-        <Text style={styles.label}>
-          Horário
-        </Text>
+        <Text style={styles.label}>Horário</Text>
 
         <TouchableOpacity
           style={styles.dateButton}
-          onPress={() =>
-            setShowTimePicker(true)
-          }
+          onPress={() => setShowTimePicker(true)}
         >
           <Text style={styles.dateButtonText}>
             {formatTime(appointmentDate)}
@@ -346,39 +275,27 @@ export default function AppointmentFormScreen({
         )}
 
         {/* RESUMO */}
-        {selectedPetId &&
-          selectedClinicId && (
-            <View style={styles.summary}>
-              <Text style={styles.summaryTitle}>
-                Resumo
-              </Text>
+        {selectedPetId && selectedClinicId && (
+          <View style={styles.summary}>
+            <Text style={styles.summaryTitle}>Resumo</Text>
 
-              <Text style={styles.summaryText}>
-                Pet:{" "}
-                {
-                  pets.find(
-                    (pet) =>
-                      pet.id === selectedPetId
-                  )?.name
-                }
-              </Text>
+            <Text style={styles.summaryText}>
+              Pet: {pets.find((pet) => pet.id === selectedPetId)?.name}
+            </Text>
 
-              <Text style={styles.summaryText}>
-                Clínica:{" "}
-                {selectedClinic?.name}
-              </Text>
+            <Text style={styles.summaryText}>
+              Clínica: {selectedClinic?.name}
+            </Text>
 
-              <Text style={styles.summaryText}>
-                Data:{" "}
-                {formatDate(appointmentDate)}
-              </Text>
+            <Text style={styles.summaryText}>
+              Data: {formatDate(appointmentDate)}
+            </Text>
 
-              <Text style={styles.summaryText}>
-                Horário:{" "}
-                {formatTime(appointmentDate)}
-              </Text>
-            </View>
-          )}
+            <Text style={styles.summaryText}>
+              Horário: {formatTime(appointmentDate)}
+            </Text>
+          </View>
+        )}
 
         <TouchableOpacity
           style={[
@@ -387,9 +304,7 @@ export default function AppointmentFormScreen({
               styles.scheduleButtonDisabled,
           ]}
           onPress={handleSchedule}
-          disabled={
-            createAppointmentMutation.isPending
-          }
+          disabled={createAppointmentMutation.isPending}
         >
           <Text style={styles.scheduleButtonText}>
             {createAppointmentMutation.isPending
@@ -404,57 +319,32 @@ export default function AppointmentFormScreen({
 
 function formatAppointmentDate(date: Date): string {
   const year = date.getFullYear();
-  const month = String(
-    date.getMonth() + 1
-  ).padStart(2, "0");
-  const day = String(
-    date.getDate()
-  ).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
 
-  const hours = String(
-    date.getHours()
-  ).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
 
-  const minutes = String(
-    date.getMinutes()
-  ).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
 
-  const seconds = String(
-    date.getSeconds()
-  ).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
 function getErrorMessage(error: any): string {
-  if (
-    error?.message?.includes(
-      "outside clinic opening hours"
-    )
-  ) {
+  if (error?.message?.includes("outside clinic opening hours")) {
     return "O horário escolhido está fora do horário de funcionamento da clínica.";
   }
 
-  if (
-    error?.message?.includes(
-      "already has an appointment"
-    )
-  ) {
+  if (error?.message?.includes("already has an appointment")) {
     return "Este pet já possui uma consulta nesse dia e horário.";
   }
 
-  if (
-    error?.message?.includes(
-      "only schedule appointments"
-    )
-  ) {
+  if (error?.message?.includes("only schedule appointments")) {
     return "Você só pode agendar consultas para seus próprios pets.";
   }
 
-  return (
-    error?.message ||
-    "Ocorreu um erro ao agendar a consulta."
-  );
+  return error?.message || "Ocorreu um erro ao agendar a consulta.";
 }
 
 const styles = StyleSheet.create({

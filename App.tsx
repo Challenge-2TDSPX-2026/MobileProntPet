@@ -62,6 +62,7 @@ export default function App() {
           <Stack.Screen
             name="AppointmentFormScreen"
             component={AppointmentFormScreen}
+            options={{ headerShown: false }}
           />
 
           <Stack.Screen
