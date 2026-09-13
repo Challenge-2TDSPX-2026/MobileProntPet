@@ -84,3 +84,9 @@ export async function updateAppointment(
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteAppointment(id: number): Promise<void> {
+  await apiFetch<void>(`/appointment/${id}`, {
+    method: "DELETE",
+  });
+}

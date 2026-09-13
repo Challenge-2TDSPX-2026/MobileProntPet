@@ -9,6 +9,7 @@ import {
   getAppointments,
   getClinics,
   AppointmentCreateRequest,
+  deleteAppointment
 } from "../services/appointmentService";
 
 export function useClinics() {
@@ -34,6 +35,20 @@ export function useCreateAppointment() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ["appointments"],
+      });
+    },
+  });
+}
+
+export function useDeleteAppointment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => deleteAppointment(id),
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["appointments"],
       });
     },
