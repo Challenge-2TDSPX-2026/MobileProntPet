@@ -16,7 +16,7 @@ import MainButton from "../components/MainButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRegister } from "../hooks/useAuth";
 import { RegisterRequest } from "../services/authService";
-
+import BackButton from "../components/BackButton";
 
 export default function TutorRegistration({ navigation }: any) {
   const registerMutation = useRegister();
@@ -33,86 +33,85 @@ export default function TutorRegistration({ navigation }: any) {
 
   const [focusedInput, setFocusedInput] = useState("");
 
-  const [errors, setErrors] = useState<Record<string, string>> ({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   function validateForm() {
-  let newErrors: Record<string, string> = {};
+    let newErrors: Record<string, string> = {};
 
-  // validação para nome
-  if (!formData.name.trim()) {
-    newErrors.name = "O nome é obrigatório!";
+    // validação para nome
+    if (!formData.name.trim()) {
+      newErrors.name = "O nome é obrigatório!";
+    }
+
+    // validação para CPF
+    if (formData.cpf.trim().length < 11) {
+      newErrors.cpf = "CPF inválido!";
+    }
+
+    // validação de telefone
+    if (!formData.phone.trim()) {
+      newErrors.phone = "O Telefone é obrigatório!";
+    }
+
+    // validação para endereço
+    if (!formData.address.trim()) {
+      newErrors.address = "O endereço é obrigatório!";
+    }
+
+    // validação para email
+    if (!formData.email.trim()) {
+      newErrors.email = "O email é obrigatório!";
+    }
+
+    // validação de senha
+    if (formData.senha.length < 6) {
+      newErrors.senha = "A senha deve ter no mínimo 6 caracteres.";
+    }
+
+    // validação de confirmação de senha
+    if (formData.senha !== formData.password) {
+      newErrors.password = "As senhas não coincidem.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   }
 
-  // validação para CPF
-  if (formData.cpf.trim().length < 11) {
-    newErrors.cpf = "CPF inválido!";
-  }
+  async function handleRegister() {
+    const isValid = validateForm();
 
-  // validação de telefone
-  if (!formData.phone.trim()) {
-    newErrors.phone = "O Telefone é obrigatório!";
-  }
-
-  // validação para endereço
-  if (!formData.address.trim()) {
-    newErrors.address = "O endereço é obrigatório!";
-  }
-
-  // validação para email
-  if (!formData.email.trim()) {
-    newErrors.email = "O email é obrigatório!";
-  }
-
-  // validação de senha
-  if (formData.senha.length < 6) {
-    newErrors.senha = "A senha deve ter no mínimo 6 caracteres.";
-  }
-
-  // validação de confirmação de senha
-  if (formData.senha !== formData.password) {
-    newErrors.password = "As senhas não coincidem.";
-  }
-
-  setErrors(newErrors);
-
-  return Object.keys(newErrors).length === 0;
-}
-
-async function handleRegister() {
-  const isValid = validateForm();
-
-  if (!isValid) {
-    return;
-  }
-
-  try {
-    const role = await AsyncStorage.getItem("selectedRole");
-
-    if (role !== "ROLE_USER") {
-      console.log("Role de tutor não encontrada.");
+    if (!isValid) {
       return;
     }
 
-    const data: RegisterRequest = {
-      email: formData.email,
-      password: formData.senha,
-      role: "ROLE_USER",
-      owner: {
-        name: formData.name,
-        cpf: formData.cpf,
-        email:formData.email,
-        phone: formData.phone,
+    try {
+      const role = await AsyncStorage.getItem("selectedRole");
 
-      },
-    };
+      if (role !== "ROLE_USER") {
+        console.log("Role de tutor não encontrada.");
+        return;
+      }
 
-    await registerMutation.mutateAsync(data);
+      const data: RegisterRequest = {
+        email: formData.email,
+        password: formData.senha,
+        role: "ROLE_USER",
+        owner: {
+          name: formData.name,
+          cpf: formData.cpf,
+          email: formData.email,
+          phone: formData.phone,
+        },
+      };
 
-    navigation.navigate("LoginScreen");
-  } catch (error) {
-    console.error("Erro ao cadastrar tutor:", error);
+      await registerMutation.mutateAsync(data);
+
+      navigation.navigate("LoginScreen");
+    } catch (error) {
+      console.error("Erro ao cadastrar tutor:", error);
+    }
   }
-}
 
   function clearForm() {
     setFormData({
@@ -137,6 +136,8 @@ async function handleRegister() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+            <BackButton goBackTo="AuthScreen"/>
+
             <HeaderForm
               stepText="Passo 1 de 3"
               title="Bem-vindo ao Pront Pet"
@@ -149,10 +150,10 @@ async function handleRegister() {
                   <Text style={styles.labelName}>Nome Completo:</Text>
                 </View>
                 <View style={styles.alreadyLogin}>
-                  <TouchableOpacity 
-                  onPress={() => navigation.navigate("LoginScreen")}>
-                  <Text style={styles.alreadyLogin}>Já possuo conta!</Text>
-                  
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("LoginScreen")}
+                  >
+                    <Text style={styles.alreadyLogin}>Já possuo conta!</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -160,7 +161,7 @@ async function handleRegister() {
                 style={[
                   styles.input,
                   focusedInput === "Nome" && styles.inputFocused,
-                  errors.name && styles.inputError
+                  errors.name && styles.inputError,
                 ]}
                 value={formData.name}
                 onFocus={() => setFocusedInput("Nome")}
@@ -171,7 +172,9 @@ async function handleRegister() {
                   if (errors.name) setErrors({ ...errors, name: "" });
                 }}
               />
-              {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+              {errors.name && (
+                <Text style={styles.errorText}>{errors.name}</Text>
+              )}
 
               <View style={styles.row}>
                 <View style={{ flex: 1, marginRight: 10 }}>
@@ -180,7 +183,7 @@ async function handleRegister() {
                     style={[
                       styles.input,
                       focusedInput === "CPF" && styles.inputFocused,
-                      errors.cpf && styles.inputError
+                      errors.cpf && styles.inputError,
                     ]}
                     value={formData.cpf}
                     onFocus={() => setFocusedInput("CPF")}
@@ -192,15 +195,19 @@ async function handleRegister() {
                       if (errors.cpf) setErrors({ ...errors, cpf: "" });
                     }}
                   />
-                  {errors.cpf && <Text style={[styles.errorText, { marginTop: 4 }]}>{errors.cpf}</Text>}                
-                  </View>
+                  {errors.cpf && (
+                    <Text style={[styles.errorText, { marginTop: 4 }]}>
+                      {errors.cpf}
+                    </Text>
+                  )}
+                </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>Telefone:</Text>
                   <TextInput
                     style={[
                       styles.input,
                       focusedInput === "Telefone" && styles.inputFocused,
-                      errors.phone && styles.inputError
+                      errors.phone && styles.inputError,
                     ]}
                     value={formData.phone}
                     onFocus={() => setFocusedInput("Telefone")}
@@ -212,7 +219,11 @@ async function handleRegister() {
                       if (errors.phone) setErrors({ ...errors, phone: "" });
                     }}
                   />
-                  {errors.phone && <Text style={[styles.errorText, { marginTop: 4 }]}>{errors.phone}</Text>}                
+                  {errors.phone && (
+                    <Text style={[styles.errorText, { marginTop: 4 }]}>
+                      {errors.phone}
+                    </Text>
+                  )}
                 </View>
               </View>
 
@@ -221,7 +232,7 @@ async function handleRegister() {
                 style={[
                   styles.input,
                   focusedInput === "Endereco" && styles.inputFocused,
-                  errors.address && styles.inputError
+                  errors.address && styles.inputError,
                 ]}
                 value={formData.address}
                 onFocus={() => setFocusedInput("Endereco")}
@@ -233,14 +244,16 @@ async function handleRegister() {
                   if (errors.address) setErrors({ ...errors, address: "" });
                 }}
               />
-              {errors.address && <Text style={styles.errorText}>{errors.address}</Text>}                
+              {errors.address && (
+                <Text style={styles.errorText}>{errors.address}</Text>
+              )}
 
               <Text style={styles.label}>E-mail:</Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "Email" && styles.inputFocused,
-                  errors.email && styles.inputError
+                  errors.email && styles.inputError,
                 ]}
                 value={formData.email}
                 onFocus={() => setFocusedInput("Email")}
@@ -248,18 +261,20 @@ async function handleRegister() {
                 placeholder="seu@email.com"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                onChangeText={(txt) => { 
+                onChangeText={(txt) => {
                   setFormData({ ...formData, email: txt });
                   if (errors.email) setErrors({ ...errors, email: "" });
-              }}               
+                }}
               />
-              {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}                
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
               <Text style={styles.label}>Senha:</Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
-                  errors.senha && styles.inputError
+                  errors.senha && styles.inputError,
                 ]}
                 value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
@@ -267,18 +282,20 @@ async function handleRegister() {
                 placeholder="Digite sua senha "
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) => { 
+                onChangeText={(txt) => {
                   setFormData({ ...formData, senha: txt });
                   if (errors.senha) setErrors({ ...errors, senha: "" });
-              }}
+                }}
               />
-              {errors.senha && <Text style={styles.errorText}>{errors.senha}</Text>}
+              {errors.senha && (
+                <Text style={styles.errorText}>{errors.senha}</Text>
+              )}
               <Text style={styles.label}>Confirme sua senha: </Text>
               <TextInput
                 style={[
                   styles.input,
                   focusedInput === "ConfSenha" && styles.inputFocused,
-                  errors.password && styles.inputError
+                  errors.password && styles.inputError,
                 ]}
                 value={formData.password}
                 onFocus={() => setFocusedInput("ConfSenha")}
@@ -291,13 +308,12 @@ async function handleRegister() {
                   if (errors.password) setErrors({ ...errors, password: "" });
                 }}
               />
-              {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+              {errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
               <View style={styles.tutorFormButton}>
                 <MainButton title="Limpar" onPress={() => clearForm()} />
-                <MainButton
-                  title="Criar Conta"
-                  onPress={handleRegister}
-                />
+                <MainButton title="Criar Conta" onPress={handleRegister} />
               </View>
             </View>
           </ScrollView>
@@ -319,23 +335,23 @@ const styles = StyleSheet.create({
   },
 
   inputError: {
-    borderColor: "#EF4444", 
+    borderColor: "#EF4444",
     borderWidth: 1,
   },
   errorText: {
     color: "#EF4444",
     fontSize: 12,
-    marginTop: -10, 
+    marginTop: -10,
     marginBottom: 10,
     marginLeft: 4,
   },
 
-  alreadyLogin: { 
+  alreadyLogin: {
     color: "#eb9a22",
     fontWeight: "bold",
     fontSize: 14,
     marginBottom: 8,
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
   },
 
   form: { gap: 15 },
@@ -346,7 +362,6 @@ const styles = StyleSheet.create({
     color: "#374151",
     marginBottom: 4,
     width: 150,
-   
   },
 
   tutorFormButton: {
@@ -368,8 +383,7 @@ const styles = StyleSheet.create({
   },
 
   viewLabel: {
-    
     flexDirection: "row",
-    gap: 100
+    gap: 100,
   },
 });

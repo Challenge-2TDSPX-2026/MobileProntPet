@@ -1,26 +1,73 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, SectionList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import appointment from "../data/appointment.json";
+import { Text, StyleSheet, SectionList, ActivityIndicator } from "react-native";
+
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+
 import AppointmentRow from "../components/AppointmentRow";
-import historyAppointments from "../data/historyAppoinments.json";
+import { getAppointmentsByPet } from "../services/appointmentService";
+import { useQuery } from "@tanstack/react-query";
+import BackButton from "../components/BackButton";
 
-export default function MedicalHistoryScreen({navigation}: any) {
+export default function MedicalHistoryScreen({ navigation, route }: any) {
+  const { petId } = route.params;
+  const {
+    data: appointments = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["appointments", petId],
+    queryFn: () => getAppointmentsByPet(petId),
+    enabled: !!petId,
+  });
+
+  const now = new Date();
+
+  const upcomingAppointments = appointments.filter(
+    (appointment) => new Date(appointment.appointmentDate) >= now,
+  );
+
+  const historyAppointments = appointments.filter(
+    (appointment) => new Date(appointment.appointmentDate) < now,
+  );
+
   const sections = [
     {
-      title: "Proximas Consultas",
-      data: appointment,
+      title: "Próximas Consultas",
+      data: upcomingAppointments,
     },
     {
-      title: "Historico de consultas",
-      data: historyAppointments
-    }
+      title: "Histórico de consultas",
+      data: historyAppointments,
+    },
   ];
+
+  if (isLoading) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <ActivityIndicator size="large" />
+          <Text style={styles.loadingText}>Carregando consultas...</Text>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <Text style={styles.errorText}>Erro ao carregar as consultas.</Text>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <BackButton goBackTo="TutorHomeScreen" params={{ petId: petId }} />
+
         <SectionList
           sections={sections}
           keyExtractor={(item) => item.id.toString()}
@@ -28,8 +75,18 @@ export default function MedicalHistoryScreen({navigation}: any) {
             <Text style={styles.sectionTitle}>{section.title}</Text>
           )}
           renderItem={({ item }) => (
-            <AppointmentRow onPress={() => navigation.navigate("AppointmentDetailsScreen", {appointment:item})} appointment={item}/>
+            <AppointmentRow
+              appointment={item}
+              onPress={() =>
+                navigation.navigate("AppointmentDetailsScreen", {
+                  appointment: item,
+                })
+              }
+            />
           )}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nenhuma consulta encontrada.</Text>
+          }
         />
       </SafeAreaView>
     </SafeAreaProvider>
@@ -37,46 +94,34 @@ export default function MedicalHistoryScreen({navigation}: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5F7FA", padding: 10 },
-  appointmentSection: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F7FA",
+    padding: 10,
+  },
+
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginTop: 15,
     marginBottom: 10,
-    color:"#eb9a22",
+    color: "#eb9a22",
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#2D3436",
-  },
-  card: {
-    backgroundColor: "#FFF",
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 10,
-    elevation: 2,
-  },
-  cardTitle: { fontSize: 16, fontWeight: "bold" },
-  cardSubtitle: { fontSize: 14, color: "#B2BEC3" },
-});
 
-{
-  /* <View style={styles.appointmentSection}>
-           <Text style={styles.sectionTitle}>Próximas Consultas</Text>
-          <FlatList
-            data={appointment}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <AppointmentRow appointment={item} />}
-          />
-          <Text style={styles.sectionTitle}>Histórico Recente</Text>
-          <FlatList
-            data={appointment}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <AppointmentRow appointment={item} />}
-          />
-          
-        </View> */
-}
+  loadingText: {
+    textAlign: "center",
+    marginTop: 10,
+  },
+
+  errorText: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "red",
+  },
+
+  emptyText: {
+    textAlign: "center",
+    marginTop: 30,
+    color: "#777",
+  },
+});

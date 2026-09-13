@@ -21,6 +21,7 @@ import VetDashboardScreen from "./src/screens/VetDashboardScreen";
 import TutorsListScreen from "./src/screens/TutorsListScreen";
 import TutorPetScreen from "./src/screens/TutorPetScreen";
 import AppointmentFormScreen from "./src/screens/AppointmentFormScreen";
+import PostAppointmentScreen from "./src/screens/PostAppointmentScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,7 +60,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
-            <Stack.Screen
+          <Stack.Screen
             name="AppointmentFormScreen"
             component={AppointmentFormScreen}
           />
@@ -79,6 +80,12 @@ export default function App() {
           <Stack.Screen
             name="MedicalHistoryScreen"
             component={MedicalHistoryScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="PostAppointmentScreen"
+            component={PostAppointmentScreen}
             options={{ headerShown: false }}
           />
 

@@ -10,6 +10,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { usePet } from "../hooks/usePets";
 import { useRoute } from "@react-navigation/native";
+import BackButton from "../components/BackButton";
 
 function calculateAge(birthDate: string) {
   const birth = new Date(birthDate);
@@ -56,11 +57,12 @@ export default function TutorHomeScreen({ navigation }: any) {
           showsVerticalScrollIndicator={true}
           contentContainerStyle={styles.scrollContent}
         >
+          <BackButton goBackTo="MyPetsScreen" params={{ petId: petId }} />
           {/* Header com Perfil */}
           <View style={styles.header}>
             <View style={styles.profileRow}>
               <View style={styles.avatarContainer}>
-                <Text style={{ fontSize: 40 }}>🐶</Text>
+                <Text style={{ fontSize: 40 }}></Text>
               </View>
               <View style={styles.profileText}>
                 <Text style={styles.welcomeTitle}>Bem Vindo</Text>
@@ -96,42 +98,7 @@ export default function TutorHomeScreen({ navigation }: any) {
 
               <Ionicons name="chevron-forward" size={24} color="#8E9AAF" />
             </TouchableOpacity>
-            {/* Atenção Necessária */}
-            <Text style={styles.sectionTitle}>Atenção Necessária</Text>
-            <TouchableOpacity
-              style={[styles.card, styles.alertCard]}
-              onPress={() =>
-                navigation.navigate("PetVaccinesScreen", { pet: pet })
-              }
-            >
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons
-                  name="needle"
-                  size={30}
-                  color="#8e9aaf"
-                />
-              </View>
-              <View style={styles.cardTextContent}>
-                <Text style={styles.cardTitle}>Vacina V10 Atrasada</Text>
-                <Text style={styles.cardSubtitle}>
-                  Era esperada para 01/05/2026
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            {/* Tratamento em Curso */}
-            <Text style={styles.sectionTitle}>Tratamento em Curso</Text>
-            <View style={[styles.card, styles.treatmentCard]}>
-              <View style={styles.checkboxContainer}>
-                <Ionicons name="checkbox" size={24} color="#0056b3" />
-              </View>
-              <View style={styles.cardTextContent}>
-                <Text style={styles.cardTitle}>Antibiótico Oral</Text>
-                <Text style={styles.cardSubtitle}>
-                  Dose das 14:00 • 8/12 horas
-                </Text>
-              </View>
-            </View>
+            
 
             {/* Indicadores de Saúde */}
             <Text style={styles.sectionTitle}>Indicadores de Saúde</Text>
@@ -152,7 +119,7 @@ export default function TutorHomeScreen({ navigation }: any) {
             <Text style={[styles.tabText, { color: "#0056b3" }]}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("MedicalHistoryScreen")}
+            onPress={() => navigation.navigate("MedicalHistoryScreen", { petId: pet.id,})}
             style={styles.tabItem}
           >
             <Ionicons name="clipboard-outline" size={24} color="#8e9aaf" />
@@ -265,7 +232,7 @@ const styles = StyleSheet.create({
   indicatorsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: "25%",
+    height: "45%",
     alignItems: "center",
   },
   indicatorBox: {

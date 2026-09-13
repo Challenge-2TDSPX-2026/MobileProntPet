@@ -18,9 +18,8 @@ export interface ClinicResponse {
 
 export interface AppointmentResponse {
   id: number;
-  speciality: string | null;
   symptoms: string | null;
-  dignosis: string | null;
+  diagnosis: string | null;
   observations: string | null;
   clinic: ClinicResponse;
   pet: {
@@ -35,6 +34,16 @@ export interface AppointmentResponse {
   };
   appointmentDate: string;
   updatedWeight: number | null;
+}
+
+export interface AppointmentUpdateRequest {
+  petId: number;
+  clinicId: number;
+  appointmentDate: string;
+  symptoms: string;
+  diagnosis: string;
+  observations: string;
+  updatedWeight?: number;
 }
 
 export async function getClinics(): Promise<ClinicResponse[]> {
@@ -52,4 +61,26 @@ export async function createAppointment(
 
 export async function getAppointments(): Promise<AppointmentResponse[]> {
   return apiFetch<AppointmentResponse[]>("/appointment");
+}
+
+export async function getAppointmentsByPet(
+  petId: number
+): Promise<AppointmentResponse[]> {
+  return apiFetch<AppointmentResponse[]>(
+    `/appointment?petId=${petId}`
+  );
+}
+
+export async function getClinicAppointments(): Promise<AppointmentResponse[]> {
+  return apiFetch<AppointmentResponse[]>("/appointment/clinic/me");
+}
+
+export async function updateAppointment(
+  id: number,
+  data: AppointmentUpdateRequest
+): Promise<AppointmentResponse> {
+  return apiFetch<AppointmentResponse>(`/appointment/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
 }

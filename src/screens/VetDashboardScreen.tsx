@@ -8,24 +8,56 @@ import {
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-
-// Dados mockados
-const upcomingConsultations = [
-  { id: 1, idMedicalRecord: 101, idVeterinarian: 5, consultationType: "Vacina", idClinic: 2, consultationDate: "2026-05-18", symptoms: "Falta de apetite e cansaço", diagnosis: "Infecção intestinal leve", observations: "Iniciado tratamento com antibiótico veterinário e repouso.", attachment: null },
-  { id: 2, idMedicalRecord: 101, idVeterinarian: 3, consultationType: "Check-up Anual", idClinic: 1, consultationDate: "2026-03-10", symptoms: "Coceira intensa e irritação na pele", diagnosis: "Dermatite alérgica", observations: "Uso de shampoo dermatológico recomendado por 30 dias.", attachment: null },
-  { id: 3, idMedicalRecord: 101, idVeterinarian: 8, consultationType: "Hemograma Completo", idClinic: 4, consultationDate: "2025-12-02", symptoms: "Dificuldade para caminhar", diagnosis: "Inflamação nas articulações", observations: "Iniciado tratamento anti-inflamatório.", attachment: null }
-];
-
-const pastConsultations = [
-  { id: 101, idMedicalRecord: 1, idVeterinarian: 5, consultationType: "Consulta Clínica", consultationDate: "2026-05-12", symptoms: "Falta de apetite e cansaço", diagnosis: "Infecção intestinal leve", observations: "Repouso e hidratação por 5 dias.", attachment: null },
-  { id: 102, idMedicalRecord: 1, idVeterinarian: 3, consultationType: "Vacinação", consultationDate: "2026-04-20", symptoms: "Vacinação anual", diagnosis: "Pet saudável", observations: "Aplicada vacina V10.", attachment: null },
-  { id: 103, idMedicalRecord: 1, idVeterinarian: 8, consultationType: "Dermatologia", consultationDate: "2026-03-15", symptoms: "Coceira intensa e queda de pelos", diagnosis: "Dermatite alérgica", observations: "Uso de shampoo terapêutico.", attachment: null },
-  { id: 104, idMedicalRecord: 1, idVeterinarian: 6, consultationType: "Ortopedia", consultationDate: "2026-02-08", symptoms: "Dificuldade para caminhar", diagnosis: "Inflamação articular", observations: "Iniciado tratamento anti-inflamatório.", attachment: null },
-  { id: 105, idMedicalRecord: 1, idVeterinarian: 4, consultationType: "Retorno", consultationDate: "2026-01-18", symptoms: "Avaliação pós-tratamento", diagnosis: "Melhora significativa", observations: "Continuar medicação por mais 7 dias.", attachment: null }
-];
+import { useQuery } from "@tanstack/react-query";
+import { getClinicAppointments } from "../services/appointmentService";
 
 export default function VetDashboardScreen({ navigation }: any) {
-  
+  const {
+  data: appointments = [],
+  isLoading,
+  isError,
+} = useQuery({
+  queryKey: ["clinicAppointments"],
+  queryFn: getClinicAppointments,
+});
+
+  const now = new Date();
+
+  if (isLoading) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>Carregando consultas...</Text>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>Não foi possível carregar as consultas.</Text>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
+  const upcomingConsultations = appointments.filter(
+    (appointment) => new Date(appointment.appointmentDate) >= now,
+  );
+
+  const pastConsultations = appointments.filter(
+    (appointment) => new Date(appointment.appointmentDate) < now,
+  );
   const formatShortDate = (dateString: string) => {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}`;
@@ -35,7 +67,6 @@ export default function VetDashboardScreen({ navigation }: any) {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.profileRow}>
@@ -51,87 +82,101 @@ export default function VetDashboardScreen({ navigation }: any) {
           </View>
 
           <View style={styles.content}>
-            
             {/* Acesso Rápido */}
             <View style={styles.quickAccessRow}>
-              <TouchableOpacity onPress={()=> navigation.navigate("TutorsListScreen") } style={styles.quickAccessCard}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TutorsListScreen")}
+                style={styles.quickAccessCard}
+              >
                 <Ionicons name="people" size={32} color="#eb9a22" />
-                <Text style={styles.quickAccessText}>Tutores{'\n'}& Pets</Text>
+                <Text style={styles.quickAccessText}>Tutores{"\n"}& Pets</Text>
               </TouchableOpacity>
-
-            
             </View>
 
             {/* Consultas a Ocorrer */}
             <View style={styles.sectionHeaderRow}>
               <Text style={styles.sectionTitle}>Próximas Consultas</Text>
-
             </View>
 
             {upcomingConsultations.map((item) => (
-              <TouchableOpacity 
-                key={item.id} 
+              <TouchableOpacity
+                key={item.id}
                 style={styles.upcomingCard}
                 // NAVEGAÇÃO ADICIONADA AQUI:
-                onPress={() => navigation.navigate("AppointmentDetailsScreen", { appointment: item })}
+                onPress={() =>
+                  navigation.navigate("PostAppointmentScreen", {
+                    appointment: item,
+                  })
+                }
               >
                 <View style={styles.dateContainer}>
                   <Ionicons name="calendar-outline" size={18} color="#3182CE" />
-                  <Text style={styles.dateText}>{formatShortDate(item.consultationDate)}</Text>
+                  <Text style={styles.dateText}>
+                    {formatShortDate(item.appointmentDate)}
+                  </Text>
                 </View>
-                
+
                 <View style={styles.appointmentInfo}>
                   <View style={styles.titleRow}>
-                    <Text style={styles.appointmentType}>{item.consultationType}</Text>
-                    <Text style={styles.recordBadge}>Pront. #{item.idMedicalRecord}</Text>
+                    <Text style={styles.appointmentType}>
+                      { "Consulta veterinária"}
+                    </Text>
                   </View>
-                  
-                  <Text style={styles.symptomsText} numberOfLines={2}>
-                    <Text style={{fontWeight: "bold", color: "#475569"}}>Motivo: </Text>
-                    {item.symptoms}
-                  </Text>
 
                   <View style={styles.clinicInfoRow}>
                     <Ionicons name="business" size={14} color="#94A3B8" />
-                    <Text style={styles.clinicText}>Clínica {item.idClinic}</Text>
+                    <Text style={styles.clinicText}>
+                      Clínica {item.clinic.name}
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
             ))}
 
             {/* Histórico Recente */}
-            <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Últimos Atendimentos</Text>
-            
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false} 
+            <Text style={[styles.sectionTitle, { marginTop: 20 }]}>
+              Últimos Atendimentos
+            </Text>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
               style={styles.horizontalScroll}
               contentContainerStyle={{ paddingRight: 20 }}
             >
               {pastConsultations.map((item) => (
-                <TouchableOpacity // TROCADO DE VIEW PARA TOUCHABLEOPACITY AQUI
-                  key={item.id} 
+                <TouchableOpacity
+                  key={item.id}
                   style={styles.pastCard}
                   // NAVEGAÇÃO ADICIONADA AQUI:
-                  onPress={() => navigation.navigate("AppointmentDetailsScreen", { appointment: item })}
+                  onPress={() =>
+                    navigation.navigate("PostAppointmentScreen", {
+                      appointment: item,
+                    })
+                  }
                 >
                   <View style={styles.pastCardHeader}>
-                    <Text style={styles.pastDateText}>{formatShortDate(item.consultationDate)}</Text>
-                    <Ionicons name="checkmark-circle" size={18} color="#059669" />
+                    <Text style={styles.pastDateText}>
+                      {formatShortDate(item.appointmentDate)}
+                    </Text>
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={18}
+                      color="#059669"
+                    />
                   </View>
-                  
-                  <Text style={styles.pastType}>{item.consultationType}</Text>
-                  <Text style={styles.pastRecord}>Pront. #{item.idMedicalRecord}</Text>
-                  
+
+                  <Text style={styles.pastRecord}>{item.clinic.name}</Text>
+
                   <View style={styles.divider} />
-                  
+
                   <Text style={styles.pastDiagnosis} numberOfLines={2}>
-                    <Text style={{fontWeight: "bold"}}>Diag: </Text>{item.diagnosis}
+                    <Text style={{ fontWeight: "bold" }}>Diag: </Text>
+                    {item.diagnosis}
                   </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
-
           </View>
         </ScrollView>
 
@@ -146,7 +191,12 @@ export default function VetDashboardScreen({ navigation }: any) {
             <Text style={styles.tabText}>Pacientes</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.tabItem}>
-            <Ionicons name="add-circle" size={42} color="#eb9a22" style={styles.fabIcon} />
+            <Ionicons
+              name="add-circle"
+              size={42}
+              color="#eb9a22"
+              style={styles.fabIcon}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="calendar-outline" size={24} color="#8e9aaf" />
@@ -157,7 +207,6 @@ export default function VetDashboardScreen({ navigation }: any) {
             <Text style={styles.tabText}>Perfil</Text>
           </TouchableOpacity>
         </View>
-
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -394,5 +443,5 @@ const styles = StyleSheet.create({
   },
   fabIcon: {
     marginTop: -25,
-  }
+  },
 });
