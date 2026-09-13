@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import BackButton from "../components/BackButton";
+
 import {
   AppointmentResponse,
   updateAppointment,
@@ -120,6 +122,7 @@ export default function PostAppointmentScreen({ navigation, route }: any) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+      <BackButton goBackTo="VetDashboardScreen" params={{}} />
         <Text style={styles.title}>Pós-consulta</Text>
 
         <Text style={styles.subtitle}>

@@ -26,6 +26,20 @@ function calculateAge(birthDate: string) {
   return age;
 }
 
+function getPetEmoji(species: string) {
+  const normalizedSpecies = species.toLowerCase().trim();
+
+  if (normalizedSpecies === "cachorro" || normalizedSpecies === "cão") {
+    return "🐶";
+  }
+
+  if (normalizedSpecies === "gato") {
+    return "🐱";
+  }
+
+  return "🐾";
+}
+
 export default function TutorHomeScreen({ navigation }: any) {
   const route = useRoute<any>();
   const { petId } = route.params;
@@ -62,7 +76,7 @@ export default function TutorHomeScreen({ navigation }: any) {
           <View style={styles.header}>
             <View style={styles.profileRow}>
               <View style={styles.avatarContainer}>
-                <Text style={{ fontSize: 40 }}></Text>
+                <Text style={{ fontSize: 40 }}>{getPetEmoji(pet.species)}</Text>
               </View>
               <View style={styles.profileText}>
                 <Text style={styles.welcomeTitle}>Bem Vindo</Text>

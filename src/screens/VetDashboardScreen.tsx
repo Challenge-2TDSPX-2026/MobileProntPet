@@ -136,10 +136,24 @@ export default function VetDashboardScreen({ navigation }: any) {
   // FORMATAR DATA
   // =========================
 
-  const formatShortDate = (dateString: string) => {
-    const [year, month, day] = dateString.split("-");
+  const formatAppointmentDate = (dateString: string) => {
+    const date = new Date(dateString);
 
-    return `${day}/${month}`;
+    const dateFormatted = date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    const timeFormatted = date.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return {
+      date: dateFormatted,
+      time: timeFormatted,
+    };
   };
 
   // =========================
@@ -256,7 +270,11 @@ export default function VetDashboardScreen({ navigation }: any) {
                     />
 
                     <Text style={styles.dateText}>
-                      {formatShortDate(item.appointmentDate)}
+                      {formatAppointmentDate(item.appointmentDate).date}
+                    </Text>
+
+                    <Text style={styles.timeText}>
+                      {formatAppointmentDate(item.appointmentDate).time}
                     </Text>
                   </View>
 
@@ -330,32 +348,29 @@ export default function VetDashboardScreen({ navigation }: any) {
                   }
                 >
                   <View style={styles.pastCardHeader}>
-                    <Text style={styles.pastDateText}>
-                      {formatShortDate(item.appointmentDate)}
-                    </Text>
+                    <View style={styles.dateContainer}>
+                      <Ionicons
+                        name="calendar-outline"
+                        size={18}
+                        color="#3182CE"
+                      />
 
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={18}
-                      color="#059669"
-                    />
+                      <Text style={styles.dateText}>
+                        {formatAppointmentDate(item.appointmentDate).date}
+                      </Text>
+
+                      <Text style={styles.timeText}>
+                        {formatAppointmentDate(item.appointmentDate).time}
+                      </Text>
+                    </View>
                   </View>
 
-                  <Text style={styles.pastRecord}>{item.clinic.name}</Text>
+                  <View style={styles.pasCardInfo}>
+                    <Ionicons name="business" size={14} color="#94A3B8" />
+                    <Text style={styles.pastRecord}>{item.clinic.name}</Text>
+                  </View>
 
                   <View style={styles.divider} />
-
-                  <Text style={styles.pastDiagnosis} numberOfLines={2}>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Diag:{" "}
-                    </Text>
-
-                    {item.diagnosis}
-                  </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -432,7 +447,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     flexDirection: "column",
-    gap:15
+    gap: 15,
   },
 
   profileRow: {
@@ -525,7 +540,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     marginBottom: 15,
-   
   },
 
   sectionTitle: {
@@ -554,7 +568,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     marginBottom: 12,
-
     elevation: 2,
 
     shadowColor: "#000",
@@ -587,8 +600,8 @@ const styles = StyleSheet.create({
     marginRight: 15,
     alignItems: "center",
     justifyContent: "center",
-    height: 60,
-    width: 60,
+    height: 70,
+    width: 100,
   },
 
   dateText: {
@@ -688,7 +701,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     marginRight: 12,
-
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 2,
 
     shadowColor: "#000",
@@ -789,4 +804,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1F2937",
   },
+  timeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#64748B",
+    marginTop: 2,
+  },
+  pasCardInfo:{
+    flexDirection:"row",
+    gap:5,
+  }
 });

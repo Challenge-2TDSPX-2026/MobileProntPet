@@ -10,10 +10,9 @@ import {
   Platform,
 } from "react-native";
 
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+import BackButton from "../components/BackButton";
 
 import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
@@ -57,6 +56,7 @@ export default function LoginVet({ navigation }: any) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+            <BackButton goBackTo="VetRegistration" params={{}} />
             <HeaderForm
               stepText="Passo 2 de 3"
               title="Bem-vindo ao Pront Pet"
@@ -77,9 +77,7 @@ export default function LoginVet({ navigation }: any) {
                 placeholder="Digite seu e-mail"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                onChangeText={(txt) =>
-                  setFormData({ ...formData, email: txt })
-                }
+                onChangeText={(txt) => setFormData({ ...formData, email: txt })}
               />
 
               <Text style={styles.label}>Senha:</Text>
@@ -95,9 +93,7 @@ export default function LoginVet({ navigation }: any) {
                 placeholder="Digite sua senha"
                 autoCapitalize="none"
                 secureTextEntry
-                onChangeText={(txt) =>
-                  setFormData({ ...formData, senha: txt })
-                }
+                onChangeText={(txt) => setFormData({ ...formData, senha: txt })}
               />
 
               <MainButton

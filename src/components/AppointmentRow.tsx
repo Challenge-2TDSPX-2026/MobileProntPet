@@ -9,6 +9,23 @@ interface AppointmentRowProps {
   onPress: () => void;
 }
 
+function formatAppointmentDate(dateString: string) {
+  const date = new Date(dateString);
+
+  const dateFormatted = date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
+  const timeFormatted = date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return `${dateFormatted} às ${timeFormatted}`;
+}
+
 export default function AppointmentRow({
   appointment,
   onPress,
@@ -16,11 +33,12 @@ export default function AppointmentRow({
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.cardTitle}>
-        {"Consulta veterinária"}
+        Consulta veterinária
       </Text>
 
       <Text style={styles.cardSubtitle}>
-        {appointment.appointmentDate} • {appointment.pet.name}
+        {formatAppointmentDate(appointment.appointmentDate)} •{" "}
+        {appointment.pet.name}
       </Text>
     </TouchableOpacity>
   );

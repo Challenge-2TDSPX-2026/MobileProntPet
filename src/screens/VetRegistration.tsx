@@ -16,6 +16,7 @@ import MainButton from "../components/MainButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRegister } from "../hooks/useAuth";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import BackButton from "../components/BackButton";
 
 export default function VetRegistration({ navigation }: any) {
   const [showOpeningPicker, setShowOpeningPicker] = useState(false);
@@ -100,6 +101,7 @@ export default function VetRegistration({ navigation }: any) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+             <BackButton goBackTo="AuthScreen" params={{}} />
             <HeaderForm
               stepText="Passo 1 de 3"
               title="Bem-vindo ao Pront Pet"
