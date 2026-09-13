@@ -20,6 +20,7 @@ import LoginVet from "./src/screens/LoginVet";
 import VetDashboardScreen from "./src/screens/VetDashboardScreen";
 import TutorsListScreen from "./src/screens/TutorsListScreen";
 import TutorPetScreen from "./src/screens/TutorPetScreen";
+import AppointmentFormScreen from "./src/screens/AppointmentFormScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,19 +29,18 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator>
-
           <Stack.Screen
             name="AuthScreen"
             component={AuthScreen}
             options={{ headerShown: false }}
           />
 
-           <Stack.Screen
+          <Stack.Screen
             name="LoginScreen"
             component={LoginScreen}
             options={{ headerShown: false }}
           />
-          
+
           <Stack.Screen
             name="TutorForm"
             component={TutorForm}
@@ -59,6 +59,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+            <Stack.Screen
+            name="AppointmentFormScreen"
+            component={AppointmentFormScreen}
+          />
+
           <Stack.Screen
             name="PetVaccinesScreen"
             component={PetVaccinesScreen}
@@ -70,8 +75,6 @@ export default function App() {
             component={MyPetsScreen}
             options={{ headerShown: false }}
           />
-
-         
 
           <Stack.Screen
             name="MedicalHistoryScreen"

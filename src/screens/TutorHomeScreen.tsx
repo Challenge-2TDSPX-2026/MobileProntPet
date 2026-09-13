@@ -52,7 +52,10 @@ export default function TutorHomeScreen({ navigation }: any) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={true}>
+        <ScrollView
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={styles.scrollContent}
+        >
           {/* Header com Perfil */}
           <View style={styles.header}>
             <View style={styles.profileRow}>
@@ -70,6 +73,29 @@ export default function TutorHomeScreen({ navigation }: any) {
           </View>
 
           <View style={styles.content}>
+            {/* Marcar consulta */}
+            <TouchableOpacity
+              style={styles.appointmentButton}
+              onPress={() =>
+                navigation.navigate("AppointmentFormScreen", {
+                  petId: pet.id,
+                })
+              }
+            >
+              <View style={styles.appointmentIcon}>
+                <Ionicons name="calendar-outline" size={28} color="#EB9A22" />
+              </View>
+
+              <View style={styles.appointmentText}>
+                <Text style={styles.appointmentTitle}>Marcar consulta</Text>
+
+                <Text style={styles.appointmentSubtitle}>
+                  Agende uma consulta Agora!
+                </Text>
+              </View>
+
+              <Ionicons name="chevron-forward" size={24} color="#8E9AAF" />
+            </TouchableOpacity>
             {/* Atenção Necessária */}
             <Text style={styles.sectionTitle}>Atenção Necessária</Text>
             <TouchableOpacity
@@ -114,11 +140,6 @@ export default function TutorHomeScreen({ navigation }: any) {
                 <Text style={styles.indicatorLabel}>Peso Atual</Text>
                 <Text style={styles.indicatorValue}>{pet.weight}</Text>
                 <Text style={styles.indicatorTrend}>↑ 0.5kg este mês</Text>
-              </View>
-              <View style={styles.indicatorBox}>
-                <Text style={styles.indicatorLabel}>Temperatura</Text>
-
-                <Text style={styles.indicatorStatus}>Normal</Text>
               </View>
             </View>
           </View>
@@ -201,7 +222,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1A3258",
     marginTop: 20,
-    marginBottom: 10,
   },
   card: {
     backgroundColor: "white",
@@ -245,12 +265,12 @@ const styles = StyleSheet.create({
   indicatorsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: "30%",
+    height: "25%",
     alignItems: "center",
   },
   indicatorBox: {
     backgroundColor: "white",
-    width: "48%",
+    width: "100%",
     padding: 15,
     borderRadius: 15,
     alignItems: "center",
@@ -314,4 +334,47 @@ const styles = StyleSheet.create({
     color: "#8e9aaf",
     marginTop: 2,
   },
+  appointmentButton: {
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+
+  appointmentIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "#FFF4E5",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 14,
+  },
+
+  appointmentText: {
+    flex: 1,
+  },
+
+  appointmentTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1A202C",
+  },
+
+  appointmentSubtitle: {
+    fontSize: 13,
+    color: "#718096",
+    marginTop: 4,
+  },
+  scrollContent: {
+  paddingBottom: 30,
+},
 });

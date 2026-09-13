@@ -15,8 +15,12 @@ import HeaderForm from "../components/HeaderForm";
 import MainButton from "../components/MainButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRegister } from "../hooks/useAuth";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function VetRegistration({ navigation }: any) {
+  const [showOpeningPicker, setShowOpeningPicker] = useState(false);
+  const [showClosingPicker, setShowClosingPicker] = useState(false);
+
   const registerMutation = useRegister();
 
   const [formData, setFormData] = useState({
@@ -175,41 +179,103 @@ export default function VetRegistration({ navigation }: any) {
                 <View style={styles.columnLeft}>
                   <Text style={styles.label}>Abertura:</Text>
 
-                  <TextInput
+                  <TouchableOpacity
                     style={[
                       styles.input,
                       styles.inputSmall,
                       focusedInput === "Abertura" && styles.inputFocused,
                     ]}
-                    value={formData.openingHours}
-                    onFocus={() => setFocusedInput("Abertura")}
-                    onBlur={() => setFocusedInput("")}
-                    placeholder="08:00"
-                    keyboardType="numeric"
-                    onChangeText={(txt) =>
-                      setFormData({ ...formData, openingHours: txt })
-                    }
-                  />
+                    onPress={() => setShowOpeningPicker(true)}
+                  >
+                    <Text
+                      style={{
+                        color: formData.openingHours ? "#1F2937" : "#9CA3AF",
+                        fontSize: 16,
+                      }}
+                    >
+                      {formData.openingHours || "08:00"}
+                    </Text>
+                  </TouchableOpacity>
+                  {showOpeningPicker && (
+                    <DateTimePicker
+                      value={
+                        formData.openingHours
+                          ? new Date(`1970-01-01T${formData.openingHours}:00`)
+                          : new Date(1970, 0, 1, 8, 0)
+                      }
+                      mode="time"
+                      is24Hour={true}
+                      onChange={(event, selectedDate) => {
+                        setShowOpeningPicker(false);
+
+                        if (selectedDate) {
+                          const hours = String(
+                            selectedDate.getHours(),
+                          ).padStart(2, "0");
+
+                          const minutes = String(
+                            selectedDate.getMinutes(),
+                          ).padStart(2, "0");
+
+                          setFormData({
+                            ...formData,
+                            openingHours: `${hours}:${minutes}`,
+                          });
+                        }
+                      }}
+                    />
+                  )}
                 </View>
 
                 <View style={styles.column}>
                   <Text style={styles.label}>Fechamento:</Text>
 
-                  <TextInput
+                  <TouchableOpacity
                     style={[
                       styles.input,
                       styles.inputSmall,
                       focusedInput === "Fechamento" && styles.inputFocused,
                     ]}
-                    value={formData.closingHours}
-                    onFocus={() => setFocusedInput("Fechamento")}
-                    onBlur={() => setFocusedInput("")}
-                    placeholder="18:00"
-                    keyboardType="numeric"
-                    onChangeText={(txt) =>
-                      setFormData({ ...formData, closingHours: txt })
-                    }
-                  />
+                    onPress={() => setShowClosingPicker(true)}
+                  >
+                    <Text
+                      style={{
+                        color: formData.closingHours ? "#1F2937" : "#9CA3AF",
+                        fontSize: 16,
+                      }}
+                    >
+                      {formData.closingHours || "18:00"}
+                    </Text>
+                  </TouchableOpacity>
+                  {showClosingPicker && (
+                    <DateTimePicker
+                      value={
+                        formData.closingHours
+                          ? new Date(`1970-01-01T${formData.closingHours}:00`)
+                          : new Date(1970, 0, 1, 18, 0)
+                      }
+                      mode="time"
+                      is24Hour={true}
+                      onChange={(event, selectedDate) => {
+                        setShowClosingPicker(false);
+
+                        if (selectedDate) {
+                          const hours = String(
+                            selectedDate.getHours(),
+                          ).padStart(2, "0");
+
+                          const minutes = String(
+                            selectedDate.getMinutes(),
+                          ).padStart(2, "0");
+
+                          setFormData({
+                            ...formData,
+                            closingHours: `${hours}:${minutes}`,
+                          });
+                        }
+                      }}
+                    />
+                  )}
                 </View>
               </View>
 

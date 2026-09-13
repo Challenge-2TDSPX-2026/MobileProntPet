@@ -34,7 +34,7 @@ export default function AuthScreen({ navigation }: any) {
           />
 
           <LoginButton
-            text="Sou Veterinário"
+            text="Sou Clínica"
             icon="medical"
             selected={userRole === "vet"}
             onPress={async () => {
