@@ -12,7 +12,7 @@
 
 GitHub:
 
-https://github.com/2TDSPX/challenge12-prontpet.git
+https://github.com/Challenge-2TDSPX-2026/MobileProntPet
 
 ---
 
