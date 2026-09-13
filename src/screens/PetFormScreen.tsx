@@ -21,7 +21,6 @@ export default function PetFormScreen({ navigation }: any) {
     age: "",
     weight: "",
     sex: "Male",
-    temperature: "",
   });
 
   const [focusedInput, setFocusedInput] = useState("");
@@ -117,19 +116,7 @@ export default function PetFormScreen({ navigation }: any) {
             onChangeText={(t) => setForm({ ...form, breed: t })}
           />
 
-          <Text style={styles.label}>Temperatura</Text>
-          <TextInput
-            style={[
-              styles.input,
-              focusedInput === "Temperatura" && styles.inputFocused,
-            ]}
-            onFocus={() => setFocusedInput("Temperatura")}
-            onBlur={() => setFocusedInput(" ")}
-            keyboardType="numeric"
-            value={form.temperature}
-            onChangeText={(t) => setForm({ ...form, temperature: t })}
-          />
-
+          
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <Text style={styles.label}>Data de nascimento:</Text>
@@ -199,7 +186,6 @@ export default function PetFormScreen({ navigation }: any) {
 
             <Text style={styles.label}>Raça: {form.breed}</Text>
 
-            <Text style={styles.label}>Temperatura: {form.temperature}</Text>
 
             <Text style={styles.label}>
               Data de Nascimento:

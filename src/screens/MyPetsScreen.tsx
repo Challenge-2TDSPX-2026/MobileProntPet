@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,7 +35,36 @@ export default function MyPetsScreen({ navigation }: any) {
   const pets = data?.content ?? [];
 
   function handleRemovePet(id: number) {
-    deletePetMutation.mutate(id);
+    Alert.alert("Excluir pet", "Tem certeza que deseja excluir este pet?", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: () => {
+          deletePetMutation.mutate(id, {
+            onError: (error: any) => {
+              console.error("ERRO AO DELETAR:", error);
+
+              if (error?.status === 409) {
+                Alert.alert(
+                  "Não é possível excluir",
+                  "Este pet possui uma consulta agendada e não pode ser excluído.",
+                );
+                return;
+              }
+
+              Alert.alert(
+                "Erro",
+                error?.message || "Não foi possível excluir o pet.",
+              );
+            },
+          });
+        },
+      },
+    ]);
   }
 
   if (isLoading) {

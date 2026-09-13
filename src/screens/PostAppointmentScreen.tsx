@@ -16,25 +16,21 @@ import {
   updateAppointment,
 } from "../services/appointmentService";
 
-
-export default function PostAppointmentScreen({
-  navigation,
-  route,
-}: any) {
+export default function PostAppointmentScreen({ navigation, route }: any) {
   const { appointment } = route.params;
 
   const queryClient = useQueryClient();
 
-  const [symptoms, setSymptoms] = useState(
-    appointment.symptoms ?? ""
-  );
+  const [symptoms, setSymptoms] = useState(appointment.symptoms ?? "");
 
-  const [diagnosis, setDiagnosis] = useState(
-    appointment.diagnosis ?? ""
-  );
+  const [diagnosis, setDiagnosis] = useState(appointment.diagnosis ?? "");
 
   const [observations, setObservations] = useState(
-    appointment.observations ?? ""
+    appointment.observations ?? "",
+  );
+
+  const [updatedWeight, setUpdatedWeight] = useState(
+    appointment.pet.weight?.toString() ?? "",
   );
 
   const updateMutation = useMutation({
@@ -47,10 +43,8 @@ export default function PostAppointmentScreen({
         diagnosis: diagnosis.trim(),
         observations: observations.trim(),
 
-        // Mantém o peso atual caso não exista um novo peso.
-        updatedWeight:
-          appointment.updatedWeight ??
-          appointment.pet.weight,
+        // Peso informado pelo veterinário na pós-consulta
+        updatedWeight: Number(updatedWeight.replace(",", ".")),
       }),
 
     onSuccess: () => {
@@ -66,7 +60,7 @@ export default function PostAppointmentScreen({
             text: "OK",
             onPress: () => navigation.goBack(),
           },
-        ]
+        ],
       );
     },
 
@@ -75,26 +69,26 @@ export default function PostAppointmentScreen({
 
       Alert.alert(
         "Erro",
-        error?.message ||
-          "Não foi possível salvar os dados da consulta."
+        error?.message || "Não foi possível salvar os dados da consulta.",
       );
     },
   });
 
   function handleFinishAppointment() {
     if (!symptoms.trim()) {
-      Alert.alert(
-        "Campo obrigatório",
-        "Informe os sintomas do pet."
-      );
+      Alert.alert("Campo obrigatório", "Informe os sintomas do pet.");
       return;
     }
 
     if (!diagnosis.trim()) {
-      Alert.alert(
-        "Campo obrigatório",
-        "Informe o diagnóstico."
-      );
+      Alert.alert("Campo obrigatório", "Informe o diagnóstico.");
+      return;
+    }
+
+    const weight = Number(updatedWeight.replace(",", "."));
+
+    if (!updatedWeight.trim() || isNaN(weight) || weight <= 0) {
+      Alert.alert("Peso inválido", "Informe um peso válido para o pet.");
       return;
     }
 
@@ -134,19 +128,13 @@ export default function PostAppointmentScreen({
 
         {/* DADOS DO PET */}
         <View style={styles.infoCard}>
-          <Text style={styles.sectionTitle}>
-            Informações da consulta
-          </Text>
+          <Text style={styles.sectionTitle}>Informações da consulta</Text>
 
           <Text style={styles.infoLabel}>Pet</Text>
-          <Text style={styles.infoValue}>
-            {appointment.pet.name}
-          </Text>
+          <Text style={styles.infoValue}>{appointment.pet.name}</Text>
 
           <Text style={styles.infoLabel}>Espécie</Text>
-          <Text style={styles.infoValue}>
-            {appointment.pet.species}
-          </Text>
+          <Text style={styles.infoValue}>{appointment.pet.species}</Text>
 
           <Text style={styles.infoLabel}>Raça</Text>
           <Text style={styles.infoValue}>
@@ -154,9 +142,7 @@ export default function PostAppointmentScreen({
           </Text>
 
           <Text style={styles.infoLabel}>Clínica</Text>
-          <Text style={styles.infoValue}>
-            {appointment.clinic.name}
-          </Text>
+          <Text style={styles.infoValue}>{appointment.clinic.name}</Text>
 
           <Text style={styles.infoLabel}>Data da consulta</Text>
           <Text style={styles.infoValue}>
@@ -167,6 +153,24 @@ export default function PostAppointmentScreen({
           <Text style={styles.infoValue}>
             {appointment.speciality || "Não informada"}
           </Text>
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>
+            Peso atual <Text style={styles.required}>*</Text>
+          </Text>
+
+          <TextInput
+            style={styles.input}
+            value={updatedWeight}
+            onChangeText={setUpdatedWeight}
+            placeholder="Informe o peso atual do pet"
+            placeholderTextColor="#999"
+            keyboardType="decimal-pad"
+            editable={!updateMutation.isPending}
+          />
+
+          <Text style={styles.helperText}>Peso em kg</Text>
         </View>
 
         {/* SINTOMAS */}
@@ -233,9 +237,7 @@ export default function PostAppointmentScreen({
           {updateMutation.isPending ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>
-              Finalizar consulta
-            </Text>
+            <Text style={styles.buttonText}>Finalizar consulta</Text>
           )}
         </TouchableOpacity>
 
@@ -244,9 +246,7 @@ export default function PostAppointmentScreen({
           onPress={() => navigation.goBack()}
           disabled={updateMutation.isPending}
         >
-          <Text style={styles.cancelButtonText}>
-            Voltar
-          </Text>
+          <Text style={styles.cancelButtonText}>Voltar</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   button: {
     height: 52,
     borderRadius: 10,
-    backgroundColor:"#eb9a22",
+    backgroundColor: "#eb9a22",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 8,
@@ -362,5 +362,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-});
 
+  input: {
+    height: 52,
+    borderWidth: 1,
+    borderColor: "#d0d0d0",
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    fontSize: 16,
+    color: "#222",
+    backgroundColor: "#fff",
+  },
+
+  helperText: {
+    fontSize: 12,
+    color: "#777",
+    marginTop: 5,
+  },
+});

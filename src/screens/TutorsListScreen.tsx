@@ -11,16 +11,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import tutors from "../data/tutor.json";
+
 
 
 export default function TutorListScreen({ navigation} : any) {
   const [search, setSearch] = useState("");
 
-  const filteredTutors = tutors.filter((tutor) =>
-    tutor.name.toLowerCase().includes(search.toLowerCase())
-  );
-
+  
   return (
     <SafeAreaView style={styles.container}>
       
@@ -44,48 +41,6 @@ export default function TutorListScreen({ navigation} : any) {
         />
       </View>
 
-     
-      <FlatList
-        data={filteredTutors}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate("TutorPetScreen", {
-                tutor: item,
-              })
-            }
-          >
-            {/* Avatar */}
-            <View style={styles.avatar}>
-              <Ionicons name="person" size={28} color="#FFF" />
-            </View>
-
-            {/* Infos */}
-            <View style={styles.infoContainer}>
-              <Text style={styles.name}>{item.name}</Text>
-
-              <Text style={styles.infoText}>
-                {item.phone}
-              </Text>
-
-              <Text style={styles.infoText}>
-              
-              </Text>
-            </View>
-
-            {/* Arrow */}
-            <Ionicons
-              name="chevron-forward"
-              size={22}
-              color="#94A3B8"
-            />
-          </TouchableOpacity>
-        )}
-      />
     </SafeAreaView>
   );
 }

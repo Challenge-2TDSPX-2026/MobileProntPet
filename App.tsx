@@ -19,7 +19,6 @@ import VetRegistration from "./src/screens/VetRegistration";
 import LoginVet from "./src/screens/LoginVet";
 import VetDashboardScreen from "./src/screens/VetDashboardScreen";
 import TutorsListScreen from "./src/screens/TutorsListScreen";
-import TutorPetScreen from "./src/screens/TutorPetScreen";
 import AppointmentFormScreen from "./src/screens/AppointmentFormScreen";
 import PostAppointmentScreen from "./src/screens/PostAppointmentScreen";
 
@@ -119,11 +118,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
-          <Stack.Screen
-            name="TutorPetScreen"
-            component={TutorPetScreen}
-            options={{ headerShown: false }}
-          />
+         
         </Stack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>

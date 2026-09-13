@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useRoute } from "@react-navigation/native";
 
-import vaccines from "../data/vaccines.json";
+
 import VaccineRow from "../components/VaccineRow";
 
 export default function PetVaccinesScreen({ navigation }: any) {
@@ -28,11 +28,7 @@ export default function PetVaccinesScreen({ navigation }: any) {
           </View>
         </View>
 
-        <FlatList
-          data={vaccines}
-          keyExtractor={(item) => item.idVaccine.toString()}
-          renderItem={({ item }) => <VaccineRow vaccine={item} />}
-        />
+     
       </View>
     </SafeAreaView>
   );

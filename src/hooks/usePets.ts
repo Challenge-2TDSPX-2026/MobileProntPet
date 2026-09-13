@@ -79,14 +79,19 @@ export function useUpdatePet() {
   });
 }
 
+
 export function useDeletePet() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: number) => deletePet(id),
 
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({
+    onSuccess: async (_, id) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["myPets"],
+      });
+
+      await queryClient.invalidateQueries({
         queryKey: ["pets"],
       });
 
@@ -94,6 +99,15 @@ export function useDeletePet() {
         queryKey: ["pet", id],
       });
     },
+
+    onError: (error: any) => {
+      console.error("Erro ao deletar pet:", error);
+
+      if (error?.status === 409) {
+        console.log("Pet possui consulta agendada.");
+      }
+    },
   });
 }
+
 
