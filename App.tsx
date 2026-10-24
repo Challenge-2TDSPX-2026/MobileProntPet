@@ -21,6 +21,7 @@ import VetDashboardScreen from "./src/screens/VetDashboardScreen";
 import TutorsListScreen from "./src/screens/TutorsListScreen";
 import AppointmentFormScreen from "./src/screens/AppointmentFormScreen";
 import PostAppointmentScreen from "./src/screens/PostAppointmentScreen";
+import AboutAppScreen from "./src/screens/AboutAppScreen";
 
 import {
   navigationRef,
@@ -123,6 +124,12 @@ export default function App() {
           <Stack.Screen
             name="TutorsListScreen"
             component={TutorsListScreen}
+            options={{ headerShown: false }}
+          />
+          
+          <Stack.Screen
+            name="AboutAppScreen"
+            component={AboutAppScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

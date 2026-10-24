@@ -112,7 +112,6 @@ export default function TutorHomeScreen({ navigation }: any) {
 
               <Ionicons name="chevron-forward" size={24} color="#8E9AAF" />
             </TouchableOpacity>
-            
 
             {/* Indicadores de Saúde */}
             <Text style={styles.sectionTitle}>Indicadores de Saúde</Text>
@@ -133,15 +132,22 @@ export default function TutorHomeScreen({ navigation }: any) {
             <Text style={[styles.tabText, { color: "#0056b3" }]}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("MedicalHistoryScreen", { petId: pet.id,})}
+            onPress={() =>
+              navigation.navigate("MedicalHistoryScreen", { petId: pet.id })
+            }
             style={styles.tabItem}
           >
             <Ionicons name="clipboard-outline" size={24} color="#8e9aaf" />
             <Text style={styles.tabText}>Saúde</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tabItem}>
+          <TouchableOpacity
+            style={styles.tabItem}
+            onPress={() =>
+              navigation.navigate("AboutAppScreen")
+            }
+          >
             <Ionicons name="chatbubble-outline" size={24} color="#8e9aaf" />
-            <Text style={styles.tabText}>Chat</Text>
+            <Text style={styles.tabText}>Sobre Nós</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="medical-outline" size={24} color="#8e9aaf" />
@@ -356,6 +362,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   scrollContent: {
-  paddingBottom: 30,
-},
+    paddingBottom: 30,
+  },
 });

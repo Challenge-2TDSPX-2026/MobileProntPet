@@ -403,10 +403,12 @@ export default function VetDashboardScreen({ navigation }: any) {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.tabItem}>
-            <Ionicons name="calendar-outline" size={24} color="#8e9aaf" />
-
-            <Text style={styles.tabText}>Agenda</Text>
+          <TouchableOpacity
+            style={styles.tabItem}
+            onPress={() => navigation.navigate("AboutAppScreen")}
+          >
+            <Ionicons name="chatbubble-outline" size={24} color="#8e9aaf" />
+            <Text style={styles.tabText}>Sobre Nós</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.tabItem}>
@@ -810,8 +812,8 @@ const styles = StyleSheet.create({
     color: "#64748B",
     marginTop: 2,
   },
-  pasCardInfo:{
-    flexDirection:"row",
-    gap:5,
-  }
+  pasCardInfo: {
+    flexDirection: "row",
+    gap: 5,
+  },
 });
