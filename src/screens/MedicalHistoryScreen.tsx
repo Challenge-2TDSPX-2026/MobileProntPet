@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import {
   Text,
@@ -24,9 +24,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import BackButton from "../components/BackButton";
 
 export default function MedicalHistoryScreen({ navigation, route }: any) {
-  const { petId } = route.params;
+  const { petId, appointmentId } = route.params ?? {};
 
+  const openedAppointmentId = useRef<number | null>(null);
   const queryClient = useQueryClient();
+
+  
 
   const {
     data: appointments = [],
@@ -38,6 +41,35 @@ export default function MedicalHistoryScreen({ navigation, route }: any) {
     enabled: !!petId,
   });
 
+  useEffect(() => {
+  if (!appointmentId || isLoading || isError) {
+    return;
+  }
+
+  const appointment = appointments.find(
+    (item) => item.id === Number(appointmentId)
+  );
+
+  if (
+    appointment &&
+    openedAppointmentId.current !== appointment.id
+  ) {
+    openedAppointmentId.current = appointment.id;
+
+    navigation.navigate("AppointmentDetailsScreen", {
+      appointment,
+      petId,
+    });
+  }
+}, [
+  appointmentId,
+  appointments,
+  isLoading,
+  isError,
+  navigation,
+  petId,
+]);
+
   useFocusEffect(
     useCallback(() => {
       queryClient.invalidateQueries({
@@ -45,6 +77,8 @@ export default function MedicalHistoryScreen({ navigation, route }: any) {
       });
     }, [queryClient, petId]),
   );
+
+  
 
   const deleteAppointmentMutation = useMutation({
     mutationFn: (appointmentId: number) => deleteAppointment(appointmentId),
@@ -162,7 +196,7 @@ export default function MedicalHistoryScreen({ navigation, route }: any) {
                 onPress={() =>
                   navigation.navigate("AppointmentDetailsScreen", {
                     appointment: item,
-                    petId
+                    petId,
                   })
                 }
               />

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://10.0.2.2:8080";
+const API_URL = "https://javaprontpet.onrender.com";
 
 export class ApiError extends Error {
   status: number;
@@ -33,29 +33,32 @@ export async function apiFetch<T>(
     },
   });
 
+  
   if (!response.ok) {
+    const responseBody = await response.text();
+
+    console.log("Erro HTTP:", response.status);
+    console.log("Corpo da resposta:", responseBody);
+
     let message = `Erro na API: ${response.status}`;
 
-    try {
-      const errorData = await response.json();
-
-      if (errorData?.message) {
-        message = errorData.message;
-      }
-    } catch {
+    if (responseBody) {
       try {
-        const errorText = await response.text();
+        const errorData = JSON.parse(responseBody);
 
-        if (errorText) {
-          message = errorText;
-        }
+        message =
+          errorData?.message ??
+          errorData?.detail ??
+          errorData?.error ??
+          responseBody;
       } catch {
-        // Mantém a mensagem padrão
+        message = responseBody;
       }
     }
 
     throw new ApiError(message, response.status);
   }
+
 
   // DELETE retorna 204 e não possui JSON
   if (response.status === 204) {

@@ -14,9 +14,12 @@ import BackButton from "../components/BackButton";
 
 import { useMyPets } from "../hooks/usePets";
 import { useClinics, useCreateAppointment } from "../hooks/useAppointments";
+import {
+  requestNotificationPermission,
+  scheduleAppointmentReminder,
+} from "../hooks/notification";
 
 export default function AppointmentFormScreen({ navigation, route }: any) {
-  
   const { petId } = route.params ?? {};
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null);
@@ -83,7 +86,7 @@ export default function AppointmentFormScreen({ navigation, route }: any) {
     }
   }
 
-  function handleSchedule() {
+  async function handleSchedule() {
     if (!selectedPetId) {
       Alert.alert("Atenção", "Selecione um pet.");
       return;
@@ -94,9 +97,25 @@ export default function AppointmentFormScreen({ navigation, route }: any) {
       return;
     }
 
-    if (appointmentDate.getTime() < Date.now()) {
+    if (appointmentDate.getTime() <= Date.now()) {
       Alert.alert("Data inválida", "Escolha uma data e horário futuros.");
       return;
+    }
+
+    console.log("Data selecionada:", appointmentDate);
+    console.log("Agora:", new Date());
+    console.log("Data selecionada (timestamp):", appointmentDate.getTime());
+    console.log("Agora (timestamp):", Date.now());
+
+    // Solicita a permissão antes de enviar o agendamento.
+    // Se houver erro ou a permissão for negada,
+    // a consulta ainda poderá ser criada.
+    let notificationPermission = false;
+
+    try {
+      notificationPermission = await requestNotificationPermission();
+    } catch (error) {
+      console.warn("Não foi possível solicitar a permissão:", error);
     }
 
     const appointmentDateISO = formatAppointmentDate(appointmentDate);
@@ -108,17 +127,36 @@ export default function AppointmentFormScreen({ navigation, route }: any) {
         appointmentDate: appointmentDateISO,
       },
       {
-        onSuccess: () => {
-          Alert.alert(
-            "Consulta agendada",
-            "Sua consulta foi agendada com sucesso.",
-            [
-              {
-                text: "OK",
-                onPress: () => navigation.goBack(),
-              },
-            ],
-          );
+        onSuccess: async (createdAppointment) => {
+          let reminderScheduled = false;
+
+          if (notificationPermission) {
+            try {
+              await scheduleAppointmentReminder(
+                createdAppointment.id,
+                createdAppointment.pet.id,
+                new Date(createdAppointment.appointmentDate),
+                createdAppointment.pet.name,
+              );
+
+              reminderScheduled = true;
+            } catch (error) {
+              console.warn("Não foi possível agendar o lembrete:", error);
+            }
+          }
+
+          const message = !notificationPermission
+            ? "Sua consulta foi agendada, mas as notificações não foram autorizadas."
+            : reminderScheduled
+              ? "Sua consulta foi agendada e o lembrete foi configurado."
+              : "Sua consulta foi agendada, mas não foi possível configurar o lembrete.";
+
+          Alert.alert("Consulta agendada", message, [
+            {
+              text: "OK",
+              onPress: () => navigation.goBack(),
+            },
+          ]);
         },
 
         onError: (error: any) => {

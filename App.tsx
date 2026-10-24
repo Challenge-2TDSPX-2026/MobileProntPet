@@ -22,12 +22,19 @@ import TutorsListScreen from "./src/screens/TutorsListScreen";
 import AppointmentFormScreen from "./src/screens/AppointmentFormScreen";
 import PostAppointmentScreen from "./src/screens/PostAppointmentScreen";
 
+import {
+  navigationRef,
+  useNotificationNavigation,
+} from "./src/hooks/useNotificationNavigation";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  useNotificationNavigation();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator>
           <Stack.Screen
             name="AuthScreen"
@@ -118,8 +125,6 @@ export default function App() {
             component={TutorsListScreen}
             options={{ headerShown: false }}
           />
-
-         
         </Stack.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
