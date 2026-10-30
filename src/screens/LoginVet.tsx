@@ -75,6 +75,7 @@ export default function LoginVet({ navigation }: any) {
                 onFocus={() => setFocusedInput("Email")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="Digite seu e-mail"
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 onChangeText={(txt) => setFormData({ ...formData, email: txt })}
@@ -91,6 +92,7 @@ export default function LoginVet({ navigation }: any) {
                 onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="Digite sua senha"
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 secureTextEntry
                 onChangeText={(txt) => setFormData({ ...formData, senha: txt })}

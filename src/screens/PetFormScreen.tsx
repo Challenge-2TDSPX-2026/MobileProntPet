@@ -9,7 +9,6 @@ import { useCreatePet } from "../hooks/usePets";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function PetFormScreen({ navigation }: any) {
-
   const createPetMutation = useCreatePet();
 
   const [form, setForm] = useState({
@@ -66,6 +65,8 @@ export default function PetFormScreen({ navigation }: any) {
             ]}
             onFocus={() => setFocusedInput("NomePet")}
             onBlur={() => setFocusedInput(" ")}
+            placeholder="Digite o nome do pet"
+            placeholderTextColor="#999999"
             value={form.name}
             onChangeText={(t) => setForm({ ...form, name: t })}
           />
@@ -77,32 +78,34 @@ export default function PetFormScreen({ navigation }: any) {
             onValueChange={(itemValue) =>
               setForm({ ...form, species: itemValue })
             }
+            style={{
+              color: "#000000",
+              backgroundColor: "#FFFFFF",
+            }}
           >
             <Picker.Item label="Cachorro" value="Cachorro" />
             <Picker.Item label="Gato" value="Gato" />
             <Picker.Item label="Outro" value="Outro" />
           </Picker>
 
-            {form.species == "Outro" && (
-              <>
-                <Text style={styles.label}> Qual a espécie do pet?</Text>
+          {form.species == "Outro" && (
+            <>
+              <Text style={styles.label}> Qual a espécie do pet?</Text>
 
-                <TextInput
-                  style={[
-                    styles.input,
-                    focusedInput === "OutraEspecie" && styles.inputFocused,
-                  ]}
-                  placeholder="Ex: Coelho, Papagaio..."
-                  value={form.customSpecies}
-                  onFocus={()=> setFocusedInput("OutraEspecie")}
-                  onBlur={()=> setFocusedInput("")}
-                  onChangeText={(t)=> setForm({...form, customSpecies:t})}
-                /> 
-
-                
-              </>
-            )}
-          
+              <TextInput
+                style={[
+                  styles.input,
+                  focusedInput === "OutraEspecie" && styles.inputFocused,
+                ]}
+                placeholder="Ex: Coelho, Papagaio..."
+                placeholderTextColor="#999999"
+                value={form.customSpecies}
+                onFocus={() => setFocusedInput("OutraEspecie")}
+                onBlur={() => setFocusedInput("")}
+                onChangeText={(t) => setForm({ ...form, customSpecies: t })}
+              />
+            </>
+          )}
 
           <Text style={styles.label}>Raça</Text>
           <TextInput
@@ -110,13 +113,14 @@ export default function PetFormScreen({ navigation }: any) {
               styles.input,
               focusedInput === "Raca" && styles.inputFocused,
             ]}
+            placeholder="Digite o nome da raça"
+            placeholderTextColor="#999999"
             onFocus={() => setFocusedInput("Raca")}
             onBlur={() => setFocusedInput(" ")}
             value={form.breed}
             onChangeText={(t) => setForm({ ...form, breed: t })}
           />
 
-          
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <Text style={styles.label}>Data de nascimento:</Text>
@@ -150,6 +154,8 @@ export default function PetFormScreen({ navigation }: any) {
                   styles.input,
                   focusedInput === "Peso" && styles.inputFocused,
                 ]}
+                placeholder="Digite o peso do pet"
+                placeholderTextColor="#999999"
                 onFocus={() => setFocusedInput("Peso")}
                 onBlur={() => setFocusedInput(" ")}
                 keyboardType="numeric"
@@ -161,6 +167,10 @@ export default function PetFormScreen({ navigation }: any) {
 
           <Text style={styles.label}>Sexo *</Text>
           <Picker
+            style={{
+              color: "#000000",
+              backgroundColor: "#FFFFFF",
+            }}
             selectedValue={form.sex}
             onValueChange={(itemValue) => setForm({ ...form, sex: itemValue })}
           >
@@ -182,10 +192,12 @@ export default function PetFormScreen({ navigation }: any) {
               <Text>Nome: {form.name}</Text>
             </Text>
 
-            <Text style={styles.label}>Espécie: {form.species === "Outro" ? form.customSpecies : form.species}</Text>
+            <Text style={styles.label}>
+              Espécie:{" "}
+              {form.species === "Outro" ? form.customSpecies : form.species}
+            </Text>
 
             <Text style={styles.label}>Raça: {form.breed}</Text>
-
 
             <Text style={styles.label}>
               Data de Nascimento:
@@ -202,19 +214,15 @@ export default function PetFormScreen({ navigation }: any) {
           <MainButton
             title="Adicionar Novo Pet"
             onPress={() => {
-              const species = 
-              form.species === "Outro"
-              ? form.customSpecies : form.species;
+              const species =
+                form.species === "Outro" ? form.customSpecies : form.species;
 
               const petData = {
-                name : form.name,
+                name: form.name,
                 species: species,
                 breed: form.breed,
-                birthDate : form.birthDate
-                .toISOString()
-                .split("T")[0],
-                weight: Number(form.weight.replace(",", ".")
-                ),
+                birthDate: form.birthDate.toISOString().split("T")[0],
+                weight: Number(form.weight.replace(",", ".")),
                 sex: form.sex as "Male" | "Female" | "Other",
               };
 
@@ -226,9 +234,9 @@ export default function PetFormScreen({ navigation }: any) {
                   navigation.navigate("MyPetsScreen");
                 },
                 onError: (error) => {
-                  console.log("Erro ao cadastrar pet", error)
-                }
-              })
+                  console.log("Erro ao cadastrar pet", error);
+                },
+              });
             }}
           />
         </ScrollView>

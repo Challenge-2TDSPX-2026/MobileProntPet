@@ -167,6 +167,7 @@ export default function TutorRegistration({ navigation }: any) {
                 onFocus={() => setFocusedInput("Nome")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Ex: Iago..."
+                placeholderTextColor="#999999"
                 onChangeText={(txt) => {
                   setFormData({ ...formData, name: txt });
                   if (errors.name) setErrors({ ...errors, name: "" });
@@ -189,6 +190,7 @@ export default function TutorRegistration({ navigation }: any) {
                     onFocus={() => setFocusedInput("CPF")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="000.000.000-00"
+                    placeholderTextColor="#999999"
                     keyboardType="numeric"
                     onChangeText={(txt) => {
                       setFormData({ ...formData, cpf: txt });
@@ -213,6 +215,7 @@ export default function TutorRegistration({ navigation }: any) {
                     onFocus={() => setFocusedInput("Telefone")}
                     onBlur={() => setFocusedInput(" ")}
                     placeholder="(11) 99999-9999"
+                    placeholderTextColor="#999999"
                     keyboardType="phone-pad"
                     onChangeText={(txt) => {
                       setFormData({ ...formData, phone: txt });
@@ -238,6 +241,7 @@ export default function TutorRegistration({ navigation }: any) {
                 onFocus={() => setFocusedInput("Endereco")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Rua, número, bairro e cidade"
+                placeholderTextColor="#999999"
                 multiline
                 onChangeText={(txt) => {
                   setFormData({ ...formData, address: txt });
@@ -259,6 +263,7 @@ export default function TutorRegistration({ navigation }: any) {
                 onFocus={() => setFocusedInput("Email")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="seu@email.com"
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 onChangeText={(txt) => {
@@ -280,6 +285,7 @@ export default function TutorRegistration({ navigation }: any) {
                 onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Digite sua senha "
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 secureTextEntry
                 onChangeText={(txt) => {
@@ -301,6 +307,7 @@ export default function TutorRegistration({ navigation }: any) {
                 onFocus={() => setFocusedInput("ConfSenha")}
                 onBlur={() => setFocusedInput(" ")}
                 placeholder="Confirme sua senha "
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 secureTextEntry
                 onChangeText={(txt) => {
@@ -384,6 +391,6 @@ const styles = StyleSheet.create({
 
   viewLabel: {
     flexDirection: "row",
-    gap: 100,
+    gap: 80,
   },
 });

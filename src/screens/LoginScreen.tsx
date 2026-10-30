@@ -87,6 +87,7 @@ export default function LoginScreen({ navigation }: any) {
                 onFocus={() => setFocusedInput("Email")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="seu@email.com"
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 value={formData.email}
@@ -108,6 +109,7 @@ export default function LoginScreen({ navigation }: any) {
                 onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput("")}
                 placeholder="Digite sua senha"
+                placeholderTextColor="#999999"
                 autoCapitalize="none"
                 secureTextEntry
                 value={formData.senha}
