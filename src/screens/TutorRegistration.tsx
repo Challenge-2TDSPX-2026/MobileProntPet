@@ -391,6 +391,6 @@ const styles = StyleSheet.create({
 
   viewLabel: {
     flexDirection: "row",
-    gap: 80,
+    gap: 50,
   },
 });

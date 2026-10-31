@@ -81,6 +81,8 @@ export default function PetFormScreen({ navigation }: any) {
             style={{
               color: "#000000",
               backgroundColor: "#FFFFFF",
+              borderWidth: 1,
+              borderColor: "#000000",
             }}
           >
             <Picker.Item label="Cachorro" value="Cachorro" />
