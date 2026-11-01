@@ -87,6 +87,7 @@ export default function LoginVet({ navigation }: any) {
                 style={[
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
+                  { color: "#000000" },
                 ]}
                 value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
