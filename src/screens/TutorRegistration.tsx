@@ -258,6 +258,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Email" && styles.inputFocused,
                   errors.email && styles.inputError,
+                  { color: "#000000" },
                 ]}
                 value={formData.email}
                 onFocus={() => setFocusedInput("Email")}
@@ -280,6 +281,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
                   errors.senha && styles.inputError,
+                  { color: "#000000" },
                 ]}
                 value={formData.senha}
                 onFocus={() => setFocusedInput("Senha")}
@@ -302,6 +304,7 @@ export default function TutorRegistration({ navigation }: any) {
                   styles.input,
                   focusedInput === "ConfSenha" && styles.inputFocused,
                   errors.password && styles.inputError,
+                  { color: "#000000" },
                 ]}
                 value={formData.password}
                 onFocus={() => setFocusedInput("ConfSenha")}

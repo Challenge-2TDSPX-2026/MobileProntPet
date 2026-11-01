@@ -105,6 +105,7 @@ export default function LoginScreen({ navigation }: any) {
                 style={[
                   styles.input,
                   focusedInput === "Senha" && styles.inputFocused,
+                  { color: "#000000" },
                 ]}
                 onFocus={() => setFocusedInput("Senha")}
                 onBlur={() => setFocusedInput("")}
