@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AboutAppScreen({ navigation }: any) {
   // Substitua pelo hash de referência da versão publicada.
-  const commitHash = "COLE_AQUI_O_HASH_DO_COMMIT";
+  const commitHash = "f115f50";
 
   return (
     <SafeAreaView style={styles.container}>
