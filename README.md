@@ -20,7 +20,15 @@ https://github.com/Challenge-2TDSPX-2026/MobileProntPet
 
 YouTube:
 
-https://youtu.be/ke2h1pFvFmM
+https://youtu.be/KpD7HTRsltg
+
+---
+
+## 🔗 Link para a publicação do app
+
+App Distribution:
+
+https://appdistribution.firebase.dev/i/a1c56dbbd3877fba
 
 ---
 
